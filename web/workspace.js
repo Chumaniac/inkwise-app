@@ -161,7 +161,7 @@ function notify(text){$('message').hidden=false;$('message').textContent=text;cl
 function sessionEnded(){return Object.assign(Error('会话已结束。'),{name:'AbortError'});}
 async function api(path,{method='GET',body,signal,idempotencyKey}={}){const sessionToken=token,session=sessionGeneration;const headers={Authorization:`Bearer ${token}`};if(idempotencyKey)headers['Idempotency-Key']=idempotencyKey;let payload=body;if(body&&!(body instanceof FormData)){headers['Content-Type']='application/json';payload=JSON.stringify(body);}const response=await fetch('/api/v1'+path,{method,headers,body:payload,signal,cache:'no-store'});if(sessionToken!==token||session!==sessionGeneration)throw sessionEnded();if(response.status===401){logout();throw Error(errors.UNAUTHENTICATED);}const data=await response.json();if(sessionToken!==token||session!==sessionGeneration)throw sessionEnded();if(!response.ok){const code=data.error?.code,error=Error(errors[code]||`操作未完成（${code||response.status}），请稍后重试或联系管理员。`);error.code=code;error.status=response.status;throw error;}return data;}
 function stopPolling(){clearTimeout(timer);timer=null;if(aborter)aborter.abort();aborter=null;}
-function logout(){resetMutationRecovery();resetCreateRecovery();clearNotice();cancelJobSelection();resetCandidateStatus();candidateEdits.clear();candidatesAborter?.abort();candidatesAborter=null;candidateFocusId='';candidateFocusJob='';clearReadiness();sessionGeneration++;loginAborter?.abort();loginAborter=null;libraryRequest++;libraryAborter?.abort();libraryAborter=null;learningRequest++;learningAborter?.abort();learningAborter=null;clearRevisions();clearHandoff();selectionVersion++;clearCitation();resetEvents();jobsRequest++;candidatesRequest++;jobsOffset=0;jobsSort='created';candidatesOffset=0;dirty=false;stopPolling();token='';me=null;job=null;candidateReviewCursor='';candidateReviewScope='';syncCandidateReviewControls();rubrics=[];renderNextAction();renderReassessmentSource();$('token').value='';$('login-panel').hidden=false;$('workspace').hidden=true;$('logout').hidden=true;$('identity').textContent='教师工作台';$('job-list').replaceChildren();$('report-content').replaceChildren();$('confirmed-text').value='';$('candidate-text').value='';for(const id of ['new-text','title','prompt','review-comment','provenance','candidate-comment','operator-request','feedback-comment','student-ref','experiment-id','experiment-rubric','experiment-release','experiment-model','experiment-classes'])$(id).value='';for(const id of ['knowledge-list','library-list','explanation','feedback-findings','language-hints','learning-list','experiment-list','ocr-review','events','review-scores'])$(id).replaceChildren();createKey=null;createFingerprint='';$('candidate-feedback').checked=false;$('reuse-confirmed').checked=false;$('experiment-consent').checked=false;$('cloud-consent').checked=false;$('cloud-budget').value='0';$('routing-preference').value='local';$('image-file').value='';$('upload-mode').value='append';for(const id of ['job-title','job-meta','job-status','job-error','service-status','job-progress'])$(id).textContent='';jobsAborter?.abort();jobsAborter=null;resetQueueFilters();resetCandidateFilters();setJobClassrooms([]);showPanel('create');resetCreateForm();clearImage();}
+function logout(){accessFileRead++;$('access-file').value='';resetMutationRecovery();resetCreateRecovery();clearNotice();cancelJobSelection();resetCandidateStatus();candidateEdits.clear();candidatesAborter?.abort();candidatesAborter=null;candidateFocusId='';candidateFocusJob='';clearReadiness();sessionGeneration++;loginAborter?.abort();loginAborter=null;libraryRequest++;libraryAborter?.abort();libraryAborter=null;learningRequest++;learningAborter?.abort();learningAborter=null;clearRevisions();clearHandoff();selectionVersion++;clearCitation();resetEvents();jobsRequest++;candidatesRequest++;jobsOffset=0;jobsSort='created';candidatesOffset=0;dirty=false;stopPolling();token='';me=null;job=null;candidateReviewCursor='';candidateReviewScope='';syncCandidateReviewControls();rubrics=[];renderNextAction();renderReassessmentSource();$('token').value='';$('login-panel').hidden=false;$('workspace').hidden=true;$('logout').hidden=true;$('identity').textContent='教师工作台';$('job-list').replaceChildren();$('report-content').replaceChildren();$('confirmed-text').value='';$('candidate-text').value='';for(const id of ['new-text','title','prompt','review-comment','provenance','candidate-comment','operator-request','feedback-comment','student-ref','experiment-id','experiment-rubric','experiment-release','experiment-model','experiment-classes'])$(id).value='';for(const id of ['knowledge-list','library-list','explanation','feedback-findings','language-hints','learning-list','experiment-list','ocr-review','events','review-scores'])$(id).replaceChildren();createKey=null;createFingerprint='';$('candidate-feedback').checked=false;$('reuse-confirmed').checked=false;$('experiment-consent').checked=false;$('cloud-consent').checked=false;$('cloud-budget').value='0';$('routing-preference').value='local';$('image-file').value='';$('upload-mode').value='append';for(const id of ['job-title','job-meta','job-status','job-error','service-status','job-progress'])$(id).textContent='';jobsAborter?.abort();jobsAborter=null;resetQueueFilters();resetCandidateFilters();setJobClassrooms([]);showPanel('create');resetCreateForm();clearImage();}
 function clearImage(){currentImageHash=null;$('citation-boxes').replaceChildren();if($('image-dialog').open)$('image-dialog').close();$('large-original').removeAttribute('src');$('zoom-original').hidden=true;if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=null;$('original-image').removeAttribute('src');$('original-image').hidden=true;}
 function clearNotice(){clearTimeout(noticeTimer);noticeTimer=null;$('message').hidden=true;}
 function controlDisabled(id,value){$(id).dataset.stateDisabled=String(value);$(id).disabled=value;}
@@ -170,7 +170,19 @@ async function busy(button,work){
   try{await work();}catch(error){if(error.name!=='AbortError')notify(error.message);}
   finally{if(form?.busyOwner===owner){form.inert=false;form.removeAttribute('aria-busy');}if(button.busyOwner===owner){button.removeAttribute('aria-busy');button.disabled=button.dataset.stateDisabled==='true';}}
 }
-$('login-form').addEventListener('submit',e=>{e.preventDefault();busy(e.submitter,async()=>{
+let accessFileRead=0;
+$('token').addEventListener('input',()=>{accessFileRead++;});
+$('access-file').addEventListener('change',async()=>{
+  const generation=++accessFileRead,file=$('access-file').files?.[0];$('access-file').value='';$('token').value='';
+  if(!file)return;
+  if(file.size<32||file.size>1024){notify('访问文件应为本机生成的小型文本文件，请重新选择。');return;}
+  try{
+    const value=(await file.text()).trim();if(generation!==accessFileRead)return;
+    if(!/^[A-Za-z0-9_-]{32,256}$/.test(value)){notify('无法识别访问文件，请选择 teacher-access.txt，或手动填入管理员提供的凭据。');return;}
+    $('token').value=value;notify('凭据已填入，点击进入工作台。');
+  }catch{if(generation===accessFileRead)notify('访问文件无法读取，请重新选择。');}
+});
+$('login-form').addEventListener('submit',e=>{e.preventDefault();accessFileRead++;busy(e.submitter,async()=>{
   loginAborter?.abort();const controller=new AbortController();loginAborter=controller;
   const session=++sessionGeneration;token=$('token').value.trim();const sessionToken=token;
   const current=()=>loginAborter===controller&&session===sessionGeneration&&sessionToken===token;
@@ -188,7 +200,7 @@ $('login-form').addEventListener('submit',e=>{e.preventDefault();busy(e.submitte
     if(initial){choice.value=initial.id;alignGrade();}
     $('service-status').textContent=`评分模型：${status.modelConfigured?'已配置，实际结果以处理报告为准':'待配置'} · OCR：${status.ocrConfigured?'已配置':'可手工核对原文'}。所有评分仍需教师确认。`;
     $('identity').textContent=`${me.tenantId} · ${me.role==='teacher'?'任课教师':me.role==='reviewer'?'教研审核':'学校管理员'}`;
-    $('token').value='';$('login-panel').hidden=true;$('workspace').hidden=false;$('logout').hidden=false;
+    $('token').value='';$('message').textContent='';$('login-panel').hidden=true;$('workspace').hidden=false;$('logout').hidden=false;
     if(!rubrics.length)notify('当前学校没有已发布量规，管理员需先配置量规。');
   }catch(error){if(current()){logout();throw error;}if(!token&&error.message===errors.UNAUTHENTICATED)throw error;throw sessionEnded();}
   finally{if(loginAborter===controller)loginAborter=null;}
@@ -458,7 +470,7 @@ function renderReport(){
     const findings=job.review?.findings||job.result.findings||[];
     for(const [index,item] of findings.entries()){
       root.append(node('blockquote',item.evidence.quote),citationButton(item.evidence),node('p',item.suggestion));
-      if(!job.review){const label=node('label',undefined,'check'),check=document.createElement('input');check.type='checkbox';check.checked=true;check.id=`proof-include-${index}`;label.append(check,node('span','发布这条建议'));const area=document.createElement('textarea');area.id=`proof-suggestion-${index}`;area.maxLength=700;area.value=item.suggestion;$('feedback-findings').append(label,area);}
+      if(!job.review){const label=node('label',undefined,'check'),check=document.createElement('input');check.type='checkbox';check.checked=false;check.id=`proof-include-${index}`;label.append(check,node('span','发布这条建议'));const area=document.createElement('textarea');area.id=`proof-suggestion-${index}`;area.maxLength=700;area.value=item.suggestion;$('feedback-findings').append(label,area);}
     }
     if(!findings.length)root.append(node('p','未发现可发布的具体问题，仍请教师核对。','hint'));
     if(job.review)root.append(node('p',job.review.comment));return;
@@ -488,14 +500,16 @@ function renderReport(){
   }
   if(job.review){root.append(node('h3','教师总评'),node('p',job.review.comment));return;}
   $('feedback-confirmation').checked=false;
+  $('review-scores').append(node('p','模型评语默认不发布。核对后可逐项采纳或改写；未选项只保留教师总评。','hint'));
   for(const score of job.result.scores){
     const needsRewrite=job.feedbackIssues?.[score.dimension]==='NO_CHANGE_CORRECTION';
     const section=node('section',undefined,'feedback-edit'),label=node('label',labels[score.dimension],'band-row'),input=document.createElement('input');
     input.type='number';input.min='0';input.max='4';input.step='1';input.required=true;input.value=String(score.band);input.dataset.dimension=score.dimension;label.append(input);section.append(label);
     if(needsRewrite)section.append(node('p','原自动评语未给出实际修改。请填写依据和建议，再勾选发布本维度的评语。','notice'));
-    const include=node('label',undefined,'check'),checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=!needsRewrite;checkbox.id=`include-${score.dimension}`;include.append(checkbox,node('span','发布本维度的评语'));section.append(include);
-    for(const [key,title] of [['reason','评定依据'],['suggestion','给学生的建议']]){const field=node('label',title),area=document.createElement('textarea');area.id=`${key}-${score.dimension}`;area.maxLength=1200;area.rows=3;area.value=needsRewrite?'':score[key];field.append(area);section.append(field);}
-    const citation=node('label',undefined,'check'),keep=document.createElement('input');keep.type='checkbox';keep.checked=true;keep.id=`cite-${score.dimension}`;citation.append(keep,node('span','保留上方已核对的原文引用'));section.append(citation);$('review-scores').append(section);
+    const include=node('label',undefined,'check'),checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=false;checkbox.id=`include-${score.dimension}`;include.append(checkbox,node('span','采纳或改写后发布本维度评语'));section.append(include);
+    const editor=node('div',undefined,'feedback-fields');editor.id=`feedback-fields-${score.dimension}`;editor.hidden=true;checkbox.setAttribute('aria-controls',editor.id);checkbox.addEventListener('change',()=>{editor.hidden=!checkbox.checked;});
+    for(const [key,title] of [['reason','评定依据'],['suggestion','给学生的建议']]){const field=node('label',title),area=document.createElement('textarea');area.id=`${key}-${score.dimension}`;area.maxLength=1200;area.rows=3;area.value=needsRewrite?'':score[key];field.append(area);editor.append(field);}
+    const citation=node('label',undefined,'check'),keep=document.createElement('input');keep.type='checkbox';keep.checked=true;keep.id=`cite-${score.dimension}`;citation.append(keep,node('span','保留上方已核对的原文引用'));editor.append(citation);section.append(editor);$('review-scores').append(section);
   }
 }
 $('review-form').addEventListener('submit',e=>{e.preventDefault();busy(e.submitter,async()=>{

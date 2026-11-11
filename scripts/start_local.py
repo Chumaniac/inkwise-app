@@ -135,6 +135,7 @@ def main() -> int:
     parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--no-open', action='store_true')
     parser.add_argument('--start-model', action='store_true')
+    parser.add_argument('--model-profile', choices=['qwen2.5-7b', 'deepseek-r1-7b'], default='qwen2.5-7b', help='Only used when creating a new private workspace')
     parser.add_argument('--show-setup', action='store_true', help='Show local setup guidance when a model is unavailable')
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--stop', action='store_true')
@@ -179,7 +180,7 @@ def main() -> int:
         if args.check or args.upgrade_check:
             raise SystemExit('LOCAL_CONFIGURATION_MISSING; start once to create a private workspace')
         setup_local(data, ROOT / 'teaching', frontend_dir=ROOT / 'web',
-                    vision_executable=vision if vision.is_file() else None)
+                    vision_executable=vision if vision.is_file() else None, model_profile=args.model_profile)
     os.environ['INKWISE_SERVED_FRONTEND_DIR'] = str(ROOT / 'web')
     os.environ['INKWISE_REFERENCE_PACK'] = str(ROOT / 'teaching/reference-pack.json')
     if vision.is_file():
@@ -218,7 +219,8 @@ def main() -> int:
             ensure_loopback_port_available(args.port)
             from inkwise.cli import write_private
             write_private(running, json.dumps({'pid': os.getpid(), 'started': process_stamp(os.getpid()), 'port': args.port}))
-            prepared = serve_setup(args.port, lambda: doctor(settings, connect=True))
+            prepared = serve_setup(args.port, lambda: doctor(settings, connect=True),
+                                   model_name=settings.model_name, model_base_url=settings.model_base_url)
             running.unlink(missing_ok=True)
             if prepared:
                 report = doctor(settings, connect=True)

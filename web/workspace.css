@@ -213,3 +213,7 @@ button.primary{box-shadow:inset 0 1px #ffffff20,0 2px 4px #40352b12}input:not([t
 
 /* Focused job headings stay below the shared sticky header. */
 html{scroll-padding-top:88px}
+
+.feedback-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;grid-column:1/-1}.feedback-fields>.check{grid-column:1/-1}@media(max-width:760px){.feedback-fields{grid-template-columns:1fr}}
+
+.feedback-fields[hidden]{display:none}

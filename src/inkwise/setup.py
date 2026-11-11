@@ -122,9 +122,16 @@ def teaching_readiness(folder: Path) -> dict:
 
 
 def setup_local(destination: Path, teaching: Path, *, frontend_dir: Path | None = None,
-                vision_executable: Path | None = None) -> dict:
+                vision_executable: Path | None = None, model_profile: str = "qwen2.5-7b") -> dict:
     """Create a fresh isolated workspace; do not alter existing data or start services."""
 
+    profiles = {
+        "qwen2.5-7b": ("inkwise-qwen-local", 32768, "inkwise-qwen-local-v1"),
+        "deepseek-r1-7b": ("inkwise-deepseek-local", 65536, "inkwise-0.4-v1"),
+    }
+    if model_profile not in profiles:
+        raise DomainError("LOCAL_MODEL_PROFILE_UNSUPPORTED")
+    model_name, context_tokens, pipeline_revision = profiles[model_profile]
     manifest, rubrics = load_teaching_pack(teaching)
     if frontend_dir is not None and not (frontend_dir / "index.html").is_file():
         raise DomainError("LOCAL_RUNTIME_ASSET_MISSING")
@@ -156,10 +163,10 @@ def setup_local(destination: Path, teaching: Path, *, frontend_dir: Path | None 
         configuration = {
             "DATABASE_URL": f"sqlite:///{destination}/inkwise.sqlite3",
             "DATA_DIR": str(destination), "RUBRIC_DIR": str(destination / "rules"),
-            "MODEL_BASE_URL": "http://127.0.0.1:11434/v1", "MODEL_NAME": "inkwise-deepseek-local",
+            "MODEL_BASE_URL": "http://127.0.0.1:11434/v1", "MODEL_NAME": model_name,
             "MODEL_STRUCTURED_OUTPUT": "json_schema", "MODEL_TIMEOUT_SECONDS": 120,
             "MODEL_MAX_OUTPUT_TOKENS": 4096, "MODEL_CONCURRENCY": 1, "MODEL_GLOBAL_CONCURRENCY": 1,
-            "MODEL_CONTEXT_TOKENS": 65536, "CLOUD_ENABLED": False, "MAX_CLOUD_COST_MICROUSD": 0,
+            "MODEL_CONTEXT_TOKENS": context_tokens, "PIPELINE_REVISION": pipeline_revision, "CLOUD_ENABLED": False, "MAX_CLOUD_COST_MICROUSD": 0,
             "CALIBRATION_DIR": str(destination / "calibration"),
             "REFERENCE_PACK": str((teaching / "reference-pack.json").resolve()),
             "MODEL_CALLS_PER_JOB": 12, "JOB_TIMEOUT_SECONDS": 600,

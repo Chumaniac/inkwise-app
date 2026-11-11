@@ -51,6 +51,7 @@ def _main() -> None:
     parser.add_argument("--env-file",type=Path,help="Explicit private configuration file; never printed")
     sub = parser.add_subparsers(dest="command", required=True)
     setup = sub.add_parser("setup-local")
+    setup.add_argument("--model-profile", choices=["qwen2.5-7b", "deepseek-r1-7b"], default="qwen2.5-7b")
     setup.add_argument("--directory", type=Path, default=Path("data/private/local-demo"))
     setup.add_argument("--teaching", type=Path, default=Path("teaching"))
     check = sub.add_parser("doctor")
@@ -142,7 +143,7 @@ def _main() -> None:
     settings = Settings(_env_file=args.env_file) if args.env_file else Settings()
     if args.command == "setup-local":
         from inkwise.setup import setup_local
-        result = setup_local(args.directory, args.teaching)
+        result = setup_local(args.directory, args.teaching, model_profile=args.model_profile)
         print("Isolated local workspace prepared:", result["rubrics"], "draft rubrics")
         print("Access files and .env saved privately; no services started or external words activated")
     elif args.command == "local":

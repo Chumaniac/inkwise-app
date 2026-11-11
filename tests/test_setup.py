@@ -134,15 +134,16 @@ def test_pack_rejects_hash_tampering_and_path_escape(tmp_path):
         load_teaching_pack(folder)
 
 
-def test_doctor_accepts_default_model_tag_and_redacts_headers(tmp_path, monkeypatch):
+@pytest.mark.parametrize("profile,model", [("qwen2.5-7b","inkwise-qwen-local"), ("deepseek-r1-7b","inkwise-deepseek-local")])
+def test_doctor_accepts_default_model_tag_and_redacts_headers(tmp_path, monkeypatch, profile, model):
     import httpx
     original_client = httpx.Client
     def handler(request):
         assert request.method == 'GET' and request.url.path == '/v1/models'
-        return httpx.Response(200, json={'data': [{'id': 'inkwise-deepseek-local:latest'}]})
+        return httpx.Response(200, json={'data': [{'id': model+':latest'}]})
     monkeypatch.setattr(httpx, 'Client', lambda **kwargs: original_client(transport=httpx.MockTransport(handler), **kwargs))
     destination = tmp_path / 'local'
-    setup_local(destination, TEACHING)
+    setup_local(destination, TEACHING, model_profile=profile)
     report = doctor(Settings(_env_file=destination / '.env'), connect=True)
     assert report['ready']
     assert next(item for item in report['checks'] if item['name'] == 'model-catalog')['status'] == 'pass'

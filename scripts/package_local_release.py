@@ -12,7 +12,9 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 DIRECTORIES = ('src/inkwise/', 'web/', 'teaching/')
-FILES = {'pyproject.toml', 'uv.lock', 'README.md', 'LICENSE', 'Start Inkwise.command',
+FILES = {'THIRD_PARTY_NOTICES.md', 'scripts/first_run.py', 'scripts/prepare_local_model.py',
+         'docs/user-guide.md', 'docs/privacy.md', 'docs/build.md', 'docs/troubleshooting.md', 'docs/verification.md', 'docs/references.md', 'docs/local-model-setup.md',
+         'pyproject.toml', 'uv.lock', 'README.md', 'LICENSE', 'Start Inkwise.command',
          'native/vision-ocr.swift', 'scripts/start_local.py',
          'docs/local-distribution.md', 'docs/quickstart.md', 'docs/writing-revisions.md', 'scripts/package_local_release.py'}
 

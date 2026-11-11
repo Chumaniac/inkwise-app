@@ -11,3 +11,5 @@
 - teaching/third_party/codespell 派生词表及其元数据仍为 CC BY-SA 3.0；web/assets/fonts 字体保留各自 OFL。根 MIT 不替代这些许可。
 
 模型、数据集、Intiface 应用不在运行包中。借鉴来源和未复制的实现见 docs/references.md。
+
+默认新工作区模型 Qwen2.5-7B-Instruct 的官方权重按 Apache-2.0 提供，准备工具只在本机按固定哈希下载，代码/桌面包不包含权重。原 DeepSeek 配置与旧模型保留。见 docs/local-model-setup.md。
