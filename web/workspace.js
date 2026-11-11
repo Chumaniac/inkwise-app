@@ -193,9 +193,7 @@ $('login-form').addEventListener('submit',e=>{e.preventDefault();accessFileRead+
   const check=()=>{if(!current())throw sessionEnded();};
   try{
     me=await api('/me',{signal:controller.signal});check();rubrics=(await api('/rubrics',{signal:controller.signal})).items;check();
-    const health=await fetch('/health/ready',{cache:'no-store',signal:controller.signal});check();
-    if(!health.ok)throw Error('服务暂不可用，请稍后重新登录。');
-    const status=await health.json();check();setJobClassrooms(me.classroomIds);syncCandidateReviewControls();$('job-attention').value='needs_action';if(me.classroomIds.length===1)$('job-classroom').value=me.classroomIds[0];await refreshJobs();check();
+    const status=await api('/runtime-status',{signal:controller.signal});check();setJobClassrooms(me.classroomIds);syncCandidateReviewControls();$('job-attention').value='needs_action';if(me.classroomIds.length===1)$('job-classroom').value=me.classroomIds[0];await refreshJobs();check();
     const classes=$('classroom');classes.replaceChildren();
     for(const id of me.classroomIds){const option=node('option',id);option.value=id;classes.append(option);}
     const choice=$('rubric');choice.replaceChildren();

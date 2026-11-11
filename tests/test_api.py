@@ -381,3 +381,14 @@ def test_classroom_filter_cannot_widen_scope_or_execute_injected_input(client):
     assert literal["items"] == [] and literal["statusCounts"] == {}
     invalid = client.get("/api/v1/jobs", headers=auth(), params={"classroom": "PRIVATE_CLASS_SENTINEL_" * 8})
     assert invalid.status_code == 422 and "PRIVATE_CLASS_SENTINEL" not in invalid.text
+
+def test_readiness_is_public_and_runtime_configuration_is_scoped(client):
+    response = client.get("/health/ready")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}
+    assert client.get("/api/v1/runtime-status").status_code == 401
+    assert client.get("/api/v1/runtime-status", headers={"Authorization": "Bearer invalid"}).status_code == 401
+    details = client.get("/api/v1/runtime-status", headers=auth())
+    assert details.status_code == 200
+    assert set(details.json()) == {"modelConfigured", "ocrConfigured"}
+    assert all(isinstance(value, bool) for value in details.json().values())

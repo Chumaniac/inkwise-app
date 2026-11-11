@@ -51,7 +51,7 @@ CI运行只读同步检查，拒绝两套主题漂移。不要直接修改 `demo
 
 ## 预览
 
-[教师工作台](previews/light-workspace.png) · [合成演示](previews/light-demo.png)。截图只含合成数据，展示本机代码，不表示托管站点已更新。
+[打开合成作文演示](https://chumaniac.github.io/inkwise-app/)可体验原文确认与教师复核。教师端布局见[工作台入口](../web/index.html)。旧版设计截图未随社区源码分发。
 
 ## 验证
 

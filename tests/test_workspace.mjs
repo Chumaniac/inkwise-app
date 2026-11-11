@@ -490,8 +490,8 @@ for(const oldFailure of [false,true]){
   const app=workspace((path,options)=>{
     if(path.endsWith('/me'))return Promise.resolve(response({tenantId:++logins===1?'old-login':'new-login',role:'teacher',classroomIds:[]}));
     if(path.endsWith('/rubrics'))return Promise.resolve(response({items:[]}));
-    if(path==='/health/ready'&&logins===1)return new Promise(resolve=>{finishOld=resolve;oldSignal=options.signal;});
-    if(path==='/health/ready')return Promise.resolve(response({modelConfigured:false,ocrConfigured:false}));
+    if(path==='/api/v1/runtime-status'&&logins===1)return new Promise(resolve=>{finishOld=resolve;oldSignal=options.signal;});
+    if(path==='/api/v1/runtime-status')return Promise.resolve(response({modelConfigured:false,ocrConfigured:false}));
     return Promise.resolve(response({items:[],hasMore:false}));
   });
   const login=()=>app.element('login-form').listeners.submit({preventDefault(){},submitter:app.element('login-submit')});
