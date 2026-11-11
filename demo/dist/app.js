@@ -42,7 +42,21 @@ function renderDetail(index,root){
   root.replaceChildren();
   if(index===0){
     if(!report.feedback.length){root.append(el('p','自定义正文没有预置评语。可在教师修订区填写评分与建议；这里不会把文本统计当作批改结论。','pending'));return;}
-    for(const f of report.feedback){const card=el('article',undefined,'feedback'),head=el('h3');head.append(el('span',f.type==='strength'?'亮点':'下一步',`label ${f.type==='improve'?'improve':''}`),el('span',f.title));card.append(head,el('blockquote',`“${f.quote}”`),el('p',f.body),el('small',`${f.rule} · demo-v0.1 · 合成教学反馈`));root.append(card);}
+    for(const f of report.feedback){const card=el('article',undefined,'feedback'),head=el('h3');head.append(el('span',f.type==='strength'?'亮点':'下一步',`label ${f.type==='improve'?'improve':''}`),el('span',f.title));card.append(head,el('blockquote',`“${f.quote}”`),el('p',f.body),el('small',`${f.rule} · demo-v0.1 · 合成教学反馈`));
+      const original=report.text, start=original.indexOf(f.quote);
+      if(f.quote && start>=0 && original.indexOf(f.quote,start+1)<0){
+        const jump=el('button','定位原文','button secondary');
+        jump.type='button';
+        jump.addEventListener('click',()=>{
+          const essay=$('essay');
+          if(essay.value!==original){toast('原文已变动，请重新评阅后定位。');return;}
+          essay.focus();
+          essay.setSelectionRange(start,start+f.quote.length);
+        });
+        card.append(jump);
+      }
+      root.append(card);
+    }
   }else if(index===1){
     for(const rule of rules){const card=el('div',`${rule.id} · ${rule.title}`,'evidence-card');card.append(el('small',rule.text));root.append(card);}root.append(el('p','此处展示本地预置规则。生产方案中的 Neo4j / ChromaDB 检索尚未接入。','hint'));
   }else{
