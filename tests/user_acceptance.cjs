@@ -1,12 +1,14 @@
 /* User journeys across teacher/reviewer/admin. Reuses an existing synthetic local-model report. */
 const assert=require('node:assert/strict');
+const base = new URL(process.env.INKWISE_PREVIEW_URL || 'http://127.0.0.1:8766');
+assert(['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname) && base.protocol === 'http:' && !base.username && !base.password, 'Use the loopback synthetic preview');
 const fs=require('node:fs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 (async()=>{
  const browser=await chromium.launch({channel:'chrome',headless:true});
  try{
   const page=await browser.newPage({viewport:{width:1365,height:900}});page.on('dialog',dialog=>dialog.accept());
-  async function login(token){await page.goto('http://127.0.0.1:8766/workspace/');await page.locator('#token').fill(token);await page.locator('#login-form button').click();await page.locator('#workspace').waitFor({state:'visible'});}
+  async function login(token){await page.goto(new URL('/workspace/', base).href);await page.locator('#token').fill(token);await page.locator('#login-form button').click();await page.locator('#workspace').waitFor({state:'visible'});}
   async function cases(){await page.locator('#show-knowledge').click();await page.locator('#knowledge-panel').waitFor({state:'visible'});}
   const card=()=>page.locator('#knowledge-list article').filter({hasText:'Independent synthetic review case'}).first();
   await login('synthetic-reviewer-preview-only');await cases();
@@ -33,7 +35,14 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   await page.locator('#explain-report').click();await page.waitForFunction(()=>document.querySelectorAll('#explanation h4').length===5);
   await page.locator('#review-comment').fill('本次仅核对已保存报告的使用流程，不作为教学效果签核。');await page.locator('#feedback-confirmation').check();await page.locator('#review-form button').click();
   await page.waitForFunction(()=>document.getElementById('job-status').textContent==='教师已确认');
-  const pending=page.waitForEvent('download');await page.locator('#export-job').click();const download=await pending;
+  const [readiness] = await Promise.all([
+    page.waitForResponse(response => new URL(response.url()).pathname.endsWith('/report-readiness')),
+    page.locator('#check-report-readiness').click(),
+  ]);
+  const checked = await readiness.json();
+  assert.equal(checked.canExport, true, 'Preserved report binding must permit printable export: ' + JSON.stringify(checked.checks?.map(item=>[item.code,item.status])));
+  await page.locator('#export-job:not([disabled])').waitFor();
+  const [download] = await Promise.all([page.waitForEvent('download'), page.locator('#export-job').click()]);
   const report=fs.readFileSync(await download.path(),'utf8');assert(report.includes('本次仅核对已保存报告的使用流程'));assert(!report.includes('尚未由教师确认'));
   await page.locator('#job-search').fill('');await page.locator('#job-search-form button').click();await page.locator('#new-job').click();await page.locator('#sample-text').click();await page.locator('#title').fill('取消流程验收');await page.locator('#create-form button.primary').click();
   await page.locator('#cancel-job').click();await page.waitForFunction(()=>document.getElementById('job-status').textContent==='已取消');
