@@ -103,7 +103,8 @@ console.log('PASS: compact report keeps warnings, literal evidence and teacher r
   app.run(`job={status:'teacher_review',feedbackIssues:{grammar:'NO_CHANGE_CORRECTION'},result:{total:75,warnings:['RETRIEVAL_A','RETRIEVAL_B'],scores:['content','coherence','expression','vocabulary','grammar'].map(dimension=>({dimension,band:3,reason:dimension==='grammar'?"The verb 'polished' should be 'polished'.":'Synthetic reason',suggestion:'Synthetic suggestion',evidence:[{quote:'Synthetic',ruleId:'synthetic-rule'}]}))}};renderReport()`);
   const root=app.element('report-content');
   assert.equal(root.children.filter(child=>child.textContent==='部分参考检索不可用或已被过滤，评分依据保留当前量规。').length,1,'equivalent retrieval notices appear once');
-  const controls=app.element('review-scores').children.at(-1).children.flatMap(child=>child.children);
+  const descendants = element => [element, ...element.children.flatMap(descendants)];
+  const controls = descendants(app.element('review-scores').children.at(-1));
   assert.equal(controls.find(child=>child.id==='include-grammar').checked,false,'no-change feedback is not selected for publication');
   assert.equal(controls.find(child=>child.id==='reason-grammar').value,'','teacher rewrites an empty field instead of publishing the invalid claim');
   assert.equal(app.run('job.result.scores[4].band'),3,'feedback filtering never changes the saved score');
@@ -825,4 +826,24 @@ for(const code of ['STORAGE_CAPACITY_EXCEEDED','IMAGE_STORAGE_CAPACITY_EXCEEDED'
  assert.equal(await app.run("mutateCurrentJob('image',{method:'POST',body:{version:1}})"),false);
  assert.equal(app.run('mutationRecovery.state'),'unknown');assert.equal(app.run('dirty'),true);
  console.log('PASS: explicit image capacity refusals show a next step; uncertain writes retain reconciliation');
+}
+
+{
+  const reads = [];
+  const app = workspace((_url, options) => new Promise((_resolve, reject) => {
+    reads.push(options.signal);
+    options.signal?.addEventListener('abort', () => reject(new Error('aborted')), {once:true});
+  }));
+  app.run("job={id:'synthetic-original'}; token='fixture'");
+  const first = app.run('loadImage()');
+  const second = app.run('loadImage()');
+  assert.equal(reads[0]?.aborted, true, 'switching pages must cancel the old image stream');
+  await first;
+  const deadline = [...app.timers.values()].find(timer => timer.delay === 30000);
+  assert.ok(deadline, 'a stalled image stream must have a deadline');
+  deadline.fn();
+  await assert.rejects(second, /原稿读取超时/);
+  assert.equal(app.element('original-image').hidden, true);
+  assert.equal(reads[1].aborted, true);
+  console.log('PASS: superseded and timed-out original image reads release their streams');
 }
