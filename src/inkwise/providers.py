@@ -91,7 +91,10 @@ class ModelGateway:
             try:
                 choice = response["choices"][0]
                 if choice.get("finish_reason") != "stop":
-                    raise DomainError("MODEL_OUTPUT_INCOMPLETE", 502)
+                    reason = choice.get("finish_reason")
+                    known = {"length", "content_filter", "tool_calls", "function_call"}
+                    raise DomainError("MODEL_OUTPUT_INCOMPLETE", 502,
+                                      {"finishReason": reason if isinstance(reason, str) and reason in known else "unknown"})
                 content = choice["message"]["content"]
                 if not isinstance(content, str) or len(content) > 30000:
                     raise DomainError("MODEL_INVALID_SCHEMA", 502)

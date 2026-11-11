@@ -47,6 +47,8 @@ async def test_untrusted_model_output_cannot_pass_checks(rubric, response, code)
             await score_dimension(gateway, text="A synthetic essay", prompt="Story", rubric=rubric,
                                   dimension="content", examples=[], budget=CallBudget(1))
         assert error.value.code == code
+        if code == "MODEL_OUTPUT_INCOMPLETE":
+            assert error.value.details == {"finishReason": "length"}
 
 
 @pytest.mark.asyncio
