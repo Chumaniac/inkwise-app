@@ -162,7 +162,11 @@ function sessionEnded(){return Object.assign(Error('会话已结束。'),{name:'
 async function api(path,{method='GET',body,signal,idempotencyKey}={}){const sessionToken=token,session=sessionGeneration;const headers={Authorization:`Bearer ${token}`};if(idempotencyKey)headers['Idempotency-Key']=idempotencyKey;let payload=body;if(body&&!(body instanceof FormData)){headers['Content-Type']='application/json';payload=JSON.stringify(body);}const response=await fetch('/api/v1'+path,{method,headers,body:payload,signal,cache:'no-store'});if(sessionToken!==token||session!==sessionGeneration)throw sessionEnded();if(response.status===401){logout();throw Error(errors.UNAUTHENTICATED);}const data=await response.json();if(sessionToken!==token||session!==sessionGeneration)throw sessionEnded();if(!response.ok){const code=data.error?.code,error=Error(errors[code]||`操作未完成（${code||response.status}），请稍后重试或联系管理员。`);error.code=code;error.status=response.status;throw error;}return data;}
 function stopPolling(){clearTimeout(timer);timer=null;if(aborter)aborter.abort();aborter=null;}
 function logout(){accessFileRead++;$('access-file').value='';resetMutationRecovery();resetCreateRecovery();clearNotice();cancelJobSelection();resetCandidateStatus();candidateEdits.clear();candidatesAborter?.abort();candidatesAborter=null;candidateFocusId='';candidateFocusJob='';clearReadiness();sessionGeneration++;loginAborter?.abort();loginAborter=null;libraryRequest++;libraryAborter?.abort();libraryAborter=null;learningRequest++;learningAborter?.abort();learningAborter=null;clearRevisions();clearHandoff();selectionVersion++;clearCitation();resetEvents();jobsRequest++;candidatesRequest++;jobsOffset=0;jobsSort='created';candidatesOffset=0;dirty=false;stopPolling();token='';me=null;job=null;candidateReviewCursor='';candidateReviewScope='';syncCandidateReviewControls();rubrics=[];renderNextAction();renderReassessmentSource();$('token').value='';$('login-panel').hidden=false;$('workspace').hidden=true;$('logout').hidden=true;$('identity').textContent='教师工作台';$('job-list').replaceChildren();$('report-content').replaceChildren();$('confirmed-text').value='';$('candidate-text').value='';for(const id of ['new-text','title','prompt','review-comment','provenance','candidate-comment','operator-request','feedback-comment','student-ref','experiment-id','experiment-rubric','experiment-release','experiment-model','experiment-classes'])$(id).value='';for(const id of ['knowledge-list','library-list','explanation','feedback-findings','language-hints','learning-list','experiment-list','ocr-review','events','review-scores'])$(id).replaceChildren();createKey=null;createFingerprint='';$('candidate-feedback').checked=false;$('reuse-confirmed').checked=false;$('experiment-consent').checked=false;$('cloud-consent').checked=false;$('cloud-budget').value='0';$('routing-preference').value='local';$('image-file').value='';$('upload-mode').value='append';for(const id of ['job-title','job-meta','job-status','job-error','service-status','job-progress'])$(id).textContent='';jobsAborter?.abort();jobsAborter=null;resetQueueFilters();resetCandidateFilters();setJobClassrooms([]);showPanel('create');resetCreateForm();clearImage();}
-function clearImage(){currentImageHash=null;$('citation-boxes').replaceChildren();if($('image-dialog').open)$('image-dialog').close();$('large-original').removeAttribute('src');$('zoom-original').hidden=true;if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=null;$('original-image').removeAttribute('src');$('original-image').hidden=true;}
+let imageRead = null;
+function clearImage(){
+  imageRead?.abort();
+  imageRead = null;
+  currentImageHash=null;$('citation-boxes').replaceChildren();if($('image-dialog').open)$('image-dialog').close();$('large-original').removeAttribute('src');$('zoom-original').hidden=true;if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=null;$('original-image').removeAttribute('src');$('original-image').hidden=true;}
 function clearNotice(){clearTimeout(noticeTimer);noticeTimer=null;$('message').hidden=true;}
 function controlDisabled(id,value){$(id).dataset.stateDisabled=String(value);$(id).disabled=value;}
 async function busy(button,work){
@@ -400,15 +404,53 @@ function renderUploadIntent(){
 
 function selectedImage(){const value=$('image-page').value||'1';return {archived:value.startsWith('archive:'),page:Number(value.replace('archive:',''))||1};}
 async function loadImage(){
-  const id=job.id,sessionToken=token,selection=selectionVersion,view=$('image-page').value,selected=selectedImage();clearImage();
-  const response=await fetch(`/api/v1/jobs/${id}/image?page=${selected.page}&archived=${selected.archived}`,{headers:{Authorization:`Bearer ${token}`},cache:'no-store'});
-  if(job?.id!==id||selection!==selectionVersion||sessionToken!==token||view!==$('image-page').value)return;
-  if(response.status===401){logout();throw Error(errors.UNAUTHENTICATED);}
-  if(!response.ok)throw Error(errors.IMAGE_UNAVAILABLE);
-  const blob=await response.blob();if(job?.id!==id||selection!==selectionVersion||sessionToken!==token||view!==$('image-page').value)return;
-  const imageHash=globalThis.crypto?.subtle?Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer())),byte=>byte.toString(16).padStart(2,'0')).join(''):null;
-  if(job?.id!==id||selection!==selectionVersion||sessionToken!==token||view!==$('image-page').value)return;
-  clearImage();currentImageHash=imageHash;imageUrl=URL.createObjectURL(blob);$('original-image').src=imageUrl;$('original-image').hidden=false;$('zoom-original').hidden=false;await $('original-image').decode().catch(()=>{});drawCitationBoxes();
+  const id = job.id, sessionToken = token, selection = selectionVersion;
+  const view = $('image-page').value, page = selectedImage();
+  clearImage();
+  const controller = new AbortController();
+  imageRead = controller;
+  const current = () => imageRead === controller && job?.id === id && token === sessionToken &&
+    selectionVersion === selection && $('image-page').value === view;
+  const deadline = setTimeout(() => controller.abort(), 30000);
+  try {
+    let response, blob;
+    try {
+      response = await fetch(`/api/v1/jobs/${id}/image?page=${page.page}&archived=${page.archived}`, {
+        headers: {Authorization: `Bearer ${sessionToken}`}, cache: 'no-store', signal: controller.signal
+      });
+      if (response.ok) blob = await response.blob();
+    } catch (error) {
+      if (!current()) return;
+      if (controller.signal.aborted) throw Error('原稿读取超时，请重新打开这一页。');
+      throw error;
+    } finally {
+      clearTimeout(deadline);
+    }
+    if (!current()) return;
+    if (response.status === 401) {logout(); throw Error(errors.UNAUTHENTICATED);}
+    if (!response.ok) throw Error(errors.IMAGE_UNAVAILABLE);
+    const hash = globalThis.crypto?.subtle
+      ? Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', await blob.arrayBuffer())), byte => byte.toString(16).padStart(2,'0')).join('')
+      : null;
+    if (!current()) return;
+    currentImageHash = hash;
+    imageUrl = URL.createObjectURL(blob);
+    const image = $('original-image');
+    image.src = imageUrl;
+    try {
+      await image.decode();
+    } catch {
+      if (!current()) return;
+      clearImage();
+      throw Error('原稿无法显示，请核对文件格式后重新打开。');
+    }
+    if (!current()) return;
+    image.hidden = false;
+    $('zoom-original').hidden = false;
+    drawCitationBoxes();
+  } finally {
+    if (imageRead === controller) imageRead = null;
+  }
 }
 function updatePageButtons(){const pages=job?.ocr?.pages||[],selected=selectedImage();controlDisabled('page-up',selected.archived||job?.status!=='needs_text_review'||selected.page<=1);controlDisabled('page-down',selected.archived||job?.status!=='needs_text_review'||selected.page>=pages.length);$('upload-mode').disabled=selected.archived||!job?.hasImage;if(selected.archived)$('upload-mode').value='append';}
 function renderPageSelector(){
