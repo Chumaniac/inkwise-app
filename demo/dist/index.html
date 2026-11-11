@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="墨评 K12 作文批改工作台。体验原文校对、证据评分与教师复核的合成案例演示。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>墨评 Inkwise · 作文批改工作台</title>
+
+  <link rel="icon" href="assets/mark.svg"><meta name="theme-color" content="#f3f0e9"><link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="styles.css"><script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到批改区</a>
+  <aside class="sidebar">
+    <a class="brand" href="./"><span class="brandmark">墨</span><span>墨评<small>INKWISE</small></span></a>
+    <p class="navlabel">教学工作台</p>
+    <nav aria-label="主导航">
+      <button class="nav active" aria-label="作文批改" data-view="work" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>作文批改</button>
+      <button class="nav" aria-label="教学知识库" data-view="knowledge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>教学知识库</button>
+      <button class="nav" aria-label="协作与方案" data-view="architecture"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/></svg>协作与方案</button>
+    </nav>
+    <div class="sidebottom"><span class="avatar">师</span><div>教师体验空间<small>公开演示 · 合成案例</small></div></div>
+  </aside>
+  <div class="shell">
+    <header class="topbar"><span>语言教学 <span class="slash">/</span> <strong id="breadcrumb">作文批改</strong></span><span class="edition">公开演示</span></header>
+    <main id="main" tabindex="-1">
+      <section id="work-view" class="view">
+        <div class="pagehead"><div><p class="eyebrow">作文批改演示</p><h1>对照原文，复核批改建议。</h1><p>核对建议、调整评分，再保存教师意见。</p></div><button id="reset" class="button secondary">重置演示</button></div>
+        <div class="notice"><strong>合成案例演示</strong><span>预置分数用于体验流程，未接入真实 OCR 或大模型。输入内容只在当前浏览器内处理，不上传。合成报告可主动保存到本标签页历史，关闭标签页或清除历史后移除。</span></div>
+        <div class="toolbar">
+          <div><label for="sample">体验案例</label><select id="sample" name="sample"><option value="zh">语文 · 一次小小的改变</option><option value="mixed">中英混写 · A greener school</option><option value="en">英语 · My weekend</option><option value="dialect">方言表达 · 外婆的厨房</option></select></div>
+          <div><label for="policy">语言规则</label><select id="policy" name="policy"><option value="auto">随案例路由</option><option value="zh">中文书面语</option><option value="mixed">允许中英切换</option><option value="en">英语短文</option><option value="dialect">保留方言表达</option></select></div>
+          <div class="rubric-chip"><small>当前量规</small><strong id="rubric-label">七年级 · 叙事文 v0.1</strong></div>
+        </div>
+        <div class="workspace">
+          <section class="paper panel" aria-labelledby="essay-heading">
+            <div class="panelhead"><h2 id="essay-heading">学生原文</h2><span class="tag">匿名合成样本</span></div>
+            <div class="paper-meta"><label for="essay-title">作文题目</label><input id="essay-title" maxlength="100" value="一次小小的改变" name="essay-title" autocomplete="off"></div>
+            <label for="essay" class="sr-only">作文正文，最多一万五千字符</label><textarea id="essay" autocorrect="off" autocapitalize="off" spellcheck="false" name="essay" autocomplete="off"></textarea>
+            <div class="paperfoot"><span id="char-count"></span><span id="language-label"></span></div>
+            <details class="ocr"><summary>原稿预览与手工核对</summary><p>真实手写识别尚未接入。可在本机预览图片并手工转写；图片不会上传。</p><label class="upload" for="image-input">选择原稿图片（PNG / JPEG，最多 10 MB）</label><input id="image-input" type="file" accept="image/png,image/jpeg" name="image-input" autocomplete="off"><img width="1200" height="900" decoding="async" id="image-preview" alt="本机选择的作文原稿" hidden><button id="clear-image" class="button secondary" hidden>移除图片</button><p class="hint">示例识别候选：把“己经”核对为“已经”。请按实际原稿校对，保留学生真实写错的字。</p></details>
+            <label class="check"><input type="checkbox" id="text-confirmed" checked name="text-confirmed" autocomplete="off">已核对原文，本次评阅以这份文字为准</label>
+            <button id="grade" aria-keyshortcuts="Control+Enter Meta+Enter" class="button primary">开始评阅体验 <span>Ctrl / ⌘ + Enter</span></button>
+            <p id="input-error" class="error" role="alert"></p>
+          </section>
+          <section class="review panel" aria-labelledby="report-heading">
+            <div class="panelhead"><h2 id="report-heading">评阅报告</h2><span id="report-state" class="tag amber">案例预览</span></div>
+            <div class="steps" role="group" aria-label="协作步骤"><span>01 校对</span><span>02 评分</span><span>03 复核</span><span>04 教师确认</span></div>
+            <div id="report" aria-live="polite"></div>
+          </section>
+        </div>
+        <section class="panel session-history" aria-labelledby="demo-history-title"><div class="panelhead"><h2 id="demo-history-title">本标签页历史</h2><div><button id="save-demo-report" class="button secondary">保存合成报告</button><button id="clear-demo-history" class="button secondary">清除历史</button></div></div><p class="hint">仅主动保存合成案例，最多10份；自定义正文不进入历史。关闭标签页前请导出。</p><p id="demo-history-state" role="status"></p><div id="demo-history-list"></div></section><section class="bottom-note"><strong>核对原文和每条建议后，再确认评分。</strong><span>修改原文或规则后需重新评阅。方言、识别疑点与评分分歧会优先交给教师。</span></section>
+      </section>
+      <section id="knowledge-view" class="view" hidden>
+        <div class="pagehead"><div><p class="eyebrow">规则与案例</p><h1>查看规则与教学案例。</h1><p>正式量规与教学案例分开管理，确认评分不会自动改写规则。</p></div></div>
+        <div class="notice"><strong>版本流程演示</strong><span>以下是预置规则与当前会话候选，未连接学校知识库。</span></div>
+        <div class="knowledge-grid"><section class="panel"><div class="panelhead"><h2>当前规则包</h2><span class="tag">demo-v0.1</span></div><div id="rules-list"></div></section><section class="panel"><div class="panelhead"><h2>待审核案例</h2><span id="candidate-count" class="tag">0 条</span></div><div id="candidates"></div></section></div>
+        <div class="pipeline"><div><b>01</b><h3>教师确认</h3><p>评分确认与案例授权分开。</p></div><div><b>02</b><h3>隔离评估</h3><p>去标识、校验来源、检查偏差。</p></div><div><b>03</b><h3>教研发布</h3><p>通过离线评估后发布新版本。</p></div><div><b>04</b><h3>随时回溯</h3><p>回滚完整规则与索引版本。</p></div></div>
+      </section>
+      <section id="architecture-view" class="view" hidden>
+        <div class="pagehead"><div><p class="eyebrow">处理流程</p><h1>批改流程与接入要求。</h1><p>查看任务管理、原文识别、评分和复核的职责。</p></div><a class="button secondary" href="technical-design.html" target="_blank" rel="noopener">阅读完整技术方案</a></div>
+        <div class="agent-grid">
+          <article class="panel agent"><span class="agent-number">01</span><h2>任务管理</h2><h3>统筹与裁决</h3><p>管理任务状态、固定知识版本，识别争议并转交教师。不会自行修改教学标准。</p></article>
+          <article class="panel agent"><span class="agent-number">02</span><h2>原文识别</h2><h3>忠实还原原文</h3><p>识别版面与笔迹，展示低置信候选；识别纠错与作文润色分别记录。</p></article>
+          <article class="panel agent"><span class="agent-number">03</span><h2>分项评阅</h2><h3>五维独立评分</h3><p>按内容、结构、表达、词汇与语法逐项评估，每个判断关联规则与原文。</p></article>
+          <article class="panel agent"><span class="agent-number">04</span><h2>证据复核</h2><h3>解释、质疑与修订</h3><p>检查证据和重复扣分，最多两轮修订；存在关键分歧时停止自动判断。</p></article>
+        </div>
+        <section class="panel architecture"><h2>规则与案例，双路检索</h2><div class="dual"><div><small>STRUCTURED</small><h3>Neo4j 规则图谱</h3><p>年级 → 体裁 → 维度 → 条件与例外</p></div><span>＋</span><div><small>SEMANTIC</small><h3>ChromaDB 语义案例</h3><p>BGE-M3 嵌入 · 同语言与年级锚点</p></div></div><p>适用规则先精确加载；参考证据经 RRF 融合。检索失败时保留校对与教师复核，规则缺失时停止出分。</p></section>
+        <section class="panel scope"><h2>此刻可以体验什么</h2><div class="scope-grid"><div><h3>公开演示</h3><p>四类合成案例、文字与图片本机预览、五维报告、规则证据、教师修订、报告导出、会话候选回流。</p></div><div><h3>真实后台</h3><p>私有仓库已实现持久 API、权限、OCR、双路检索、LangGraph、Kafka 和知识版本，并完成本机组件验证。<a href="engineering-status.html" target="_blank" rel="noopener">查看工程进展与真实验证</a></p></div><div><h3>正式接入前</h3><p>公开站点尚未连接真实后台。正式使用还需确认部署位置、学校量规、授权样本和教师评估；当前演示不签发真实学生成绩。</p></div></div></section>
+        <p class="source-note">架构参考：<a href="https://arxiv.org/abs/2506.13037" target="_blank" rel="noopener">MAGIC</a> · <a href="https://arxiv.org/abs/2505.13965" target="_blank" rel="noopener">CAFES</a> · <a href="https://github.com/therealthapa/NESA" target="_blank" rel="noopener">NESA</a>。论文结果不代表本产品效果；1.5 秒是受理目标，非长文完整批改实测。</p>
+      </section>
+      <footer>墨评 Inkwise <span>合成案例演示 · 结果仅保留在当前页面</span><small>© 2026 Chumaniac · 专有项目 / 公开演示</small></footer>
+    </main>
+  </div>
+  <div id="toast" role="status" hidden></div>
+</body>
+</html>

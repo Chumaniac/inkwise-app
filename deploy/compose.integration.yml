@@ -1,0 +1,57 @@
+# Disposable, synthetic-data-only services. Ports bind to loopback.
+name: inkwise-integration
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: inkwise_test
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports: ["127.0.0.1:17654:5432"]
+    tmpfs: ["/var/lib/postgresql/data"]
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d inkwise_test"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+  neo4j:
+    image: neo4j:5.26-community
+    environment:
+      NEO4J_AUTH: none
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    ports: ["127.0.0.1:17687:7687"]
+    tmpfs: ["/data"]
+    mem_limit: 1536m
+  chroma:
+    image: chromadb/chroma:1.5.9
+    ports: ["127.0.0.1:18080:8000"]
+    environment:
+      ANONYMIZED_TELEMETRY: "false"
+    mem_limit: 1g
+  kafka:
+    image: apache/kafka:4.0.0
+    profiles: ["kafka"]
+    ports: ["127.0.0.1:19192:19192"]
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:19192,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://127.0.0.1:19192
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: /tmp/kafka-logs
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+    tmpfs: ["/tmp/kafka-logs:uid=1000,gid=1000,mode=0700"]
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "KAFKA_HEAP_OPTS='-Xms16m -Xmx64m' /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20

@@ -1,0 +1,54 @@
+{
+  "checkedOn": "2026-10-10",
+  "sources": [
+    {
+      "id": "moe-zh-2022",
+      "title": "义务教育语文课程标准（2022年版）",
+      "publisher": "中华人民共和国教育部",
+      "url": "https://www.moe.gov.cn/srcsite/A26/s8001/202204/W020220420582344386456.pdf",
+      "scope": "中国义务教育1–9年级",
+      "use": "仅链接与自主改写教学原则，不复制课标正文、教材或学生样文",
+      "license": "未确认可再分发全文的开放许可"
+    },
+    {
+      "id": "moe-en-2022",
+      "title": "义务教育英语课程标准（2022年版）",
+      "publisher": "中华人民共和国教育部",
+      "url": "https://www.moe.gov.cn/srcsite/A26/s8001/202204/W020220420582349487953.pdf",
+      "scope": "中国义务教育英语学段",
+      "use": "仅链接与自主改写教学原则；具体学校教材和任务须另行对齐",
+      "license": "未确认可再分发全文的开放许可"
+    },
+    {
+      "id": "dfe-writing",
+      "title": "National curriculum in England: English programmes of study",
+      "publisher": "Department for Education",
+      "url": "https://www.gov.uk/government/publications/national-curriculum-in-england-english-programmes-of-study/national-curriculum-in-england-english-programmes-of-study",
+      "scope": "英格兰KS1–4，不与中国年级机械等同",
+      "use": "独立改写写作目的、读者、组织、修改及语言规范原则",
+      "license": "Open Government Licence v3.0；第三方内容与个人数据除外"
+    },
+    {
+      "id": "dfe-ks2",
+      "title": "Teacher assessment frameworks at the end of key stage 2",
+      "publisher": "Standards and Testing Agency",
+      "url": "https://www.gov.uk/government/publications/teacher-assessment-frameworks-at-the-end-of-key-stage-2",
+      "scope": "KS2结束阶段教师评价；不是中国考试标准",
+      "use": "参考分项达标、独立写作及整体教师判断，不复制学生范文",
+      "license": "Open Government Licence v3.0；以具体附件声明为准"
+    },
+    {
+      "id": "inkwise-original",
+      "title": "Inkwise原创教学任务和量规提案",
+      "publisher": "Inkwise",
+      "scope": "1–12年级的工程起点；10–12年级为原创扩展，未宣称符合高中课标",
+      "use": "原创合成文本、改写建议和候选权重；没有真人教师签核",
+      "license": "项目专有许可"
+    }
+  ],
+  "limitations": [
+    "课标依据与模型评分效度不同；权重和0–4分段为Inkwise提案，非官方给定。",
+    "教育部PDF在本次工具中出现重定向限制，目录与发布信息已查证；不声称完成逐页原文校勘。",
+    "在线页面可能更新，生产启用须记录学校采用版本和具体章节。"
+  ]
+}

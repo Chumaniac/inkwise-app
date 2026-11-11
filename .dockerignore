@@ -1,0 +1,11 @@
+.git
+.venv
+.dvc
+.env*
+data
+knowledge
+artifacts
+demo
+docs
+tests
+**/__pycache__

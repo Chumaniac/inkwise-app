@@ -1,0 +1,137 @@
+{
+  "status": "original-synthetic",
+  "teacherValidated": false,
+  "purpose": "课堂任务设计、界面演示和人工修改练习；不作为金标准分数或检索锚点自动发布",
+  "examples": [
+    {
+      "id": "original-01",
+      "rubricId": "zh-g1-2-narrative",
+      "title": "雨后的小路",
+      "prompt": "写一写你在雨后看到了什么。",
+      "text": "雨停了。我走到门口，看见小水坑。树叶上有水珠。风一吹，水珠落在我的手上，凉凉的。",
+      "revisionPrompt": "可以围绕水珠再补充一种感受，不要求扩成三段。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-02",
+      "rubricId": "zh-g3-4-narrative",
+      "title": "借来的尺子",
+      "prompt": "写清一次同伴帮助你的经历。",
+      "text": "上美术课时，我找不到尺子。小禾把她的尺子放到我的桌边，说我们可以轮流用。画完边框，我把尺子递给她。放学前，我整理了笔袋，想下次少一点着急。",
+      "revisionPrompt": "事件顺序清楚；可补一处当时的动作或感受。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-03",
+      "rubricId": "en-g3-4-short-text",
+      "title": "My plant",
+      "prompt": "Write a few sentences about a plant you care for.",
+      "text": "I have a small plant. It is on my desk. I give it water on Monday. New leaves is green. I like watching it grow.",
+      "revisionPrompt": "Check the verb next to “New leaves”; keep the simple words that already express the idea. (此为原创故意错误，不是学生样本)",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-04",
+      "rubricId": "mixed-g3-4-short-text",
+      "title": "双语小卡片",
+      "prompt": "写一张欢迎新同学的中英小卡片，允许两种语言。",
+      "text": "欢迎来到我们班！My name is Lin. 午休时我可以带你去图书角。You can ask me for help. 希望我们一起读有趣的书。",
+      "revisionPrompt": "语言切换由任务允许；可增加一个具体见面时间。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-05",
+      "rubricId": "zh-g5-6-narrative",
+      "title": "纸桥倒下以后",
+      "prompt": "写一次尝试失败后调整办法的经历。",
+      "text": "纸桥刚放上第三块橡皮就塌了。我把纸摊平，发现中间留下了一道折痕。第二次，我把桥面折成手风琴的样子，又让两端搭得更稳。它终于托住了五块橡皮。我把两次的做法画在本子上，准备下次比较桥面的宽度。",
+      "revisionPrompt": "细节支持改进过程；可以解释折叠后与原先的区别，避免空泛说教。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-06",
+      "rubricId": "en-g5-6-short-text",
+      "title": "A changed plan",
+      "prompt": "Describe how your group changed a plan after a problem.",
+      "text": "Our group planned to draw outside, but it started raining. We moved near the classroom window. Each person chose one part of the view. I painted the wet tree, and my friend drew the grey sky. At the end, we put our pictures together. The rain gave us a new idea.",
+      "revisionPrompt": "The sequence is clear. Add one observation that explains what changed in the pictures.",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-07",
+      "rubricId": "mixed-g5-6-short-text",
+      "title": "展览说明",
+      "prompt": "为双语读者介绍一次原创小实验，允许术语保留英文。",
+      "text": "我们比较了两座纸桥。第一座是平的，第二座用了folded paper。两座桥的跨度相同，也使用了同样大小的纸。The folded bridge held more erasers. 这次实验还不能说明所有折法都一样好，我们准备继续比较。",
+      "revisionPrompt": "可补充具体数量；保留有帮助的双语术语，不按比例扣分。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-08",
+      "rubricId": "zh-g7-9-narrative",
+      "title": "一次倾听",
+      "prompt": "叙述一次你调整看法的经历，使用具体场景。",
+      "text": "讨论墙报时，我急着把自己的草图贴上去。小岚一直举着手，我却以为她还没有准备好。轮到她发言，她拿出一张采访记录，指出我们的标题让低年级同学看不懂。我把草图往旁边移了移，请她圈出难懂的地方。后来我发现，讨论慢下来，墙报反而更快定了稿。",
+      "revisionPrompt": "动作承载了变化；可补充一处标题修改的具体例子。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-09",
+      "rubricId": "en-g7-9-short-text",
+      "title": "A library proposal",
+      "prompt": "Write a short proposal to improve a shared reading space.",
+      "text": "Our reading corner is quiet, but students often cannot find books they want. I suggest adding simple labels and a recommendation board. Labels would help readers search, while the board could introduce unfamiliar books. We should first try this for two weeks and ask classmates whether it helps. If the board becomes crowded, we can limit each recommendation to three sentences.",
+      "revisionPrompt": "Purpose and practical limits are clear; explain who will maintain the board.",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-10",
+      "rubricId": "mixed-g7-9-short-text",
+      "title": "双语活动建议",
+      "prompt": "为两种语言背景的读者提出一个读书活动建议。",
+      "text": "我们可以举行一次“同一本书，不同的发现”活动。Each group chooses one short passage. 发言者先用熟悉的语言说明，再由同伴补充另一种语言的摘要。这样能保留表达的细节，也让更多人参与。We should collect feedback after the first meeting.",
+      "revisionPrompt": "可说明摘要如何核对原意；不要求逐句翻译。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-11",
+      "rubricId": "zh-g10-12-argumentative",
+      "title": "如何使用自动反馈",
+      "prompt": "论述自动写作反馈在修改中的作用与限制。",
+      "text": "自动反馈可以帮助写作者发现遗漏，却不宜替代写作目的的判断。一条语法建议即使正确，也未必适合人物对白。使用者应先核对建议所引用的原句，再判断修改是否改变语气。有人担心这种核对降低效率，但不经核对的快速修改也可能制造新问题。较合理的做法是把机械检查交给工具，把有争议的表达保留给作者与教师讨论。",
+      "revisionPrompt": "原创进阶示例；可补充可验证的具体情境，避免将观点当作事实数据。",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-12",
+      "rubricId": "en-g10-12-argumentative",
+      "title": "Feedback and voice",
+      "prompt": "Discuss how automated feedback can support revision without replacing a writer’s choices.",
+      "text": "Automated feedback can make revision more focused, but accuracy alone does not settle every writing choice. A shorter sentence may be clearer while losing a deliberate pause. Writers should therefore compare each suggestion with the purpose of the passage. Some argue that checking every comment wastes time. A practical response is to prioritize suggestions that affect meaning and sample the rest. The tool then supports a decision rather than making it for the writer.",
+      "revisionPrompt": "Distinguish the proposed procedure from an experimentally proven result; add a concrete counterexample.",
+      "source": "inkwise-original",
+      "scores": null
+    },
+    {
+      "id": "original-13",
+      "rubricId": "mixed-g10-12-argumentative",
+      "title": "翻译中的选择",
+      "prompt": "以中英混合短论讨论翻译中的一种取舍。",
+      "text": "译文的流畅并不总等于原文信息的完整。A smooth sentence can hide a cultural reference. 因此，译者需要根据读者选择解释、保留或改写，而不是把陌生表达全部删除。另一方面，过多注释会打断阅读。One possible approach is to explain a key term once and keep later uses concise. 这种策略仍需由真实读者反馈检验。",
+      "revisionPrompt": "说明何种读者与文本适合该策略；不因语言切换扣分。",
+      "source": "inkwise-original",
+      "scores": null
+    }
+  ]
+}

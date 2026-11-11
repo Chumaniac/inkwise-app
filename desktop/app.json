@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "name": "墨评",
+  "identifier": "com.chumaniac.inkwise",
+  "mark": "墨",
+  "port": 8766,
+  "smokePort": 19014,
+  "mode": "process",
+  "path": "workspace/",
+  "readySelector": "main",
+  "launch": {
+    "executable": "{{PYTHON}}",
+    "arguments": [
+      "{{REPO}}/scripts/start_local.py",
+      "--no-open"
+    ],
+    "workingDirectory": "{{REPO}}",
+    "environment": {
+      "PYTHONPATH": "{{REPO}}/src"
+    },
+    "healthPath": "health/ready",
+    "healthMarker": "ready",
+    "stopOnQuit": false,
+    "managedStateFile": "{{HOME}}/Library/Application Support/InkwiseK12/workspace/running.json",
+    "managedScript": "{{REPO}}/scripts/start_local.py",
+    "smokeArguments": [
+      "{{REPO}}/scripts/start_local.py",
+      "--no-open",
+      "--data-dir",
+      "{{SMOKE_DIR}}/workspace",
+      "--port",
+      "19014"
+    ],
+    "smokeManagedStateFile": "{{SMOKE_DIR}}/workspace/running.json",
+    "smokeManagedScript": "{{REPO}}/scripts/start_local.py"
+  }
+}

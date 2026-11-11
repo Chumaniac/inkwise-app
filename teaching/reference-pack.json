@@ -1,0 +1,429 @@
+{
+  "version": "reference-2026-10-12-v1",
+  "checkedOn": "2026-10-12",
+  "attribution": "Inkwise原创教学参考；DfE原则参考遵循Open Government Licence v3.0。来源链接用于追溯，不代表学校已批准评分量规。",
+  "sources": [
+    {
+      "id": "moe-zh-2022",
+      "title": "义务教育语文课程标准（2022年版）",
+      "publisher": "中华人民共和国教育部",
+      "url": "https://www.moe.gov.cn/srcsite/A26/s8001/202204/W020220420582344386456.pdf",
+      "license": "未确认可再分发全文的开放许可",
+      "use": "仅链接与自主改写教学原则，不复制课标正文、教材或学生样文"
+    },
+    {
+      "id": "moe-en-2022",
+      "title": "义务教育英语课程标准（2022年版）",
+      "publisher": "中华人民共和国教育部",
+      "url": "https://www.moe.gov.cn/srcsite/A26/s8001/202204/W020220420582349487953.pdf",
+      "license": "未确认可再分发全文的开放许可",
+      "use": "仅链接与自主改写教学原则；具体学校教材和任务须另行对齐"
+    },
+    {
+      "id": "dfe-writing",
+      "title": "National curriculum in England: English programmes of study",
+      "publisher": "Department for Education",
+      "url": "https://www.gov.uk/government/publications/national-curriculum-in-england-english-programmes-of-study/national-curriculum-in-england-english-programmes-of-study",
+      "license": "Open Government Licence v3.0；第三方内容与个人数据除外",
+      "use": "独立改写写作目的、读者、组织、修改及语言规范原则"
+    },
+    {
+      "id": "dfe-ks2",
+      "title": "Teacher assessment frameworks at the end of key stage 2",
+      "publisher": "Standards and Testing Agency",
+      "url": "https://www.gov.uk/government/publications/teacher-assessment-frameworks-at-the-end-of-key-stage-2",
+      "license": "Open Government Licence v3.0；以具体附件声明为准",
+      "use": "参考分项达标、独立写作及整体教师判断，不复制学生范文"
+    },
+    {
+      "id": "moe-high-2020",
+      "title": "普通高中课程方案和学科课程标准（2017年版2020年修订）通知",
+      "publisher": "教育部",
+      "url": "https://www.moe.gov.cn/srcsite/A26/s8001/202006/t20200603_462199.html",
+      "license": "链接引用；不复制未获开放许可的正文",
+      "use": "确认高中标准的发布依据；以下教学建议由Inkwise原创，不冒称官方评分细则"
+    }
+  ],
+  "cards": [
+    {
+      "id": "zh-content-reference",
+      "title": "写清内容与中心",
+      "language": "zh",
+      "gradeMin": 1,
+      "gradeMax": 9,
+      "dimension": "content",
+      "body": "先让读者知道这篇文字要表达什么，再检查每个细节是否帮助这个中心。低年段可围绕一个具体发现写短句；高年段应说明事件、观点或任务要求。评价依据是学生已经写出的信息，不能替学生补写经历。",
+      "sourceIds": [
+        "moe-zh-2022"
+      ]
+    },
+    {
+      "id": "zh-content-advanced",
+      "title": "写清内容与中心 · 进阶",
+      "language": "zh",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "content",
+      "body": "先让读者知道这篇文字要表达什么，再检查每个细节是否帮助这个中心。低年段可围绕一个具体发现写短句；高年段应说明事件、观点或任务要求。评价依据是学生已经写出的信息，不能替学生补写经历。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020"
+      ]
+    },
+    {
+      "id": "zh-coherence-reference",
+      "title": "安排顺序与段落",
+      "language": "zh",
+      "gradeMin": 1,
+      "gradeMax": 9,
+      "dimension": "coherence",
+      "body": "叙事可按时间或事件发展安排；说明与议论可按关系安排。先检查读者能否追踪前后关系，再考虑段落和衔接。不要把三段式、连接词数量或篇幅当作结构质量本身。",
+      "sourceIds": [
+        "moe-zh-2022"
+      ]
+    },
+    {
+      "id": "zh-coherence-advanced",
+      "title": "安排顺序与段落 · 进阶",
+      "language": "zh",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "coherence",
+      "body": "叙事可按时间或事件发展安排；说明与议论可按关系安排。先检查读者能否追踪前后关系，再考虑段落和衔接。不要把三段式、连接词数量或篇幅当作结构质量本身。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020"
+      ]
+    },
+    {
+      "id": "zh-expression-reference",
+      "title": "让细节和理由发挥作用",
+      "language": "zh",
+      "gradeMin": 1,
+      "gradeMax": 9,
+      "dimension": "expression",
+      "body": "叙事反馈可以请作者补充一个可观察的动作、声音或场景。议论反馈可以请作者说明一个理由与结论的关系。建议应小而具体，保留作者想表达的内容，不要求套用范文句子。",
+      "sourceIds": [
+        "moe-zh-2022"
+      ]
+    },
+    {
+      "id": "zh-expression-advanced",
+      "title": "让细节和理由发挥作用 · 进阶",
+      "language": "zh",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "expression",
+      "body": "叙事反馈可以请作者补充一个可观察的动作、声音或场景。议论反馈可以请作者说明一个理由与结论的关系。建议应小而具体，保留作者想表达的内容，不要求套用范文句子。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020"
+      ]
+    },
+    {
+      "id": "zh-vocabulary-reference",
+      "title": "准确选词与保留个人表达",
+      "language": "zh",
+      "gradeMin": 1,
+      "gradeMax": 9,
+      "dimension": "vocabulary",
+      "body": "先检查词语是否符合语境、搭配和表达目的。常用词表达准确也可以很好，不因生僻词、成语或修辞数量多就加分。允许的方言、人物口语、引用和专名需要按作业政策判断。",
+      "sourceIds": [
+        "moe-zh-2022"
+      ]
+    },
+    {
+      "id": "zh-vocabulary-advanced",
+      "title": "准确选词与保留个人表达 · 进阶",
+      "language": "zh",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "vocabulary",
+      "body": "先检查词语是否符合语境、搭配和表达目的。常用词表达准确也可以很好，不因生僻词、成语或修辞数量多就加分。允许的方言、人物口语、引用和专名需要按作业政策判断。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020"
+      ]
+    },
+    {
+      "id": "zh-grammar-reference",
+      "title": "修改句子与标点",
+      "language": "zh",
+      "gradeMin": 1,
+      "gradeMax": 9,
+      "dimension": "grammar",
+      "body": "引用确认后的原句，指出一个影响理解或规范的问题，再说明修改方向。同一问题优先归入一个维度，避免反复扣分。OCR疑点应回到原图核对，不把识别器制造的错字当学生错误。",
+      "sourceIds": [
+        "moe-zh-2022"
+      ]
+    },
+    {
+      "id": "zh-grammar-advanced",
+      "title": "修改句子与标点 · 进阶",
+      "language": "zh",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "grammar",
+      "body": "引用确认后的原句，指出一个影响理解或规范的问题，再说明修改方向。同一问题优先归入一个维度，避免反复扣分。OCR疑点应回到原图核对，不把识别器制造的错字当学生错误。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020"
+      ]
+    },
+    {
+      "id": "en-content-reference",
+      "title": "Purpose and audience",
+      "language": "en",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "content",
+      "body": "Check whether the text responds to the task and gives the reader the necessary information. A short message and an argument have different needs. Ask for one missing detail or reason rather than inventing content for the writer. This reference is guidance, not a scored anchor.",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-content-advanced",
+      "title": "Purpose and audience · 进阶",
+      "language": "en",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "content",
+      "body": "Check whether the text responds to the task and gives the reader the necessary information. A short message and an argument have different needs. Ask for one missing detail or reason rather than inventing content for the writer. This reference is guidance, not a scored anchor. In advanced tasks, also examine the quality of evidence and possible objections. Local grading descriptors must be approved separately.",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-coherence-reference",
+      "title": "Organising a short text",
+      "language": "en",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "coherence",
+      "body": "Look for an order the reader can follow and clear references between sentences. Paragraphs should group related ideas when the length and task call for them. Do not reward a fixed template or the number of linking words without checking meaning.",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-coherence-advanced",
+      "title": "Organising a short text · 进阶",
+      "language": "en",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "coherence",
+      "body": "Look for an order the reader can follow and clear references between sentences. Paragraphs should group related ideas when the length and task call for them. Do not reward a fixed template or the number of linking words without checking meaning. In advanced tasks, also examine the quality of evidence and possible objections. Local grading descriptors must be approved separately.",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-expression-reference",
+      "title": "Detail, explanation and voice",
+      "language": "en",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "expression",
+      "body": "Choose feedback that helps the reader see an event or understand a reason. Consider the intended reader and tone. Preserve deliberate choices in dialogue and personal voice. Give a revision action instead of replacing the whole paragraph.",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-expression-advanced",
+      "title": "Detail, explanation and voice · 进阶",
+      "language": "en",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "expression",
+      "body": "Choose feedback that helps the reader see an event or understand a reason. Consider the intended reader and tone. Preserve deliberate choices in dialogue and personal voice. Give a revision action instead of replacing the whole paragraph. In advanced tasks, also examine the quality of evidence and possible objections. Local grading descriptors must be approved separately.",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-vocabulary-reference",
+      "title": "Words in context",
+      "language": "en",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "vocabulary",
+      "body": "Judge accuracy and collocation before rarity. Familiar words can express precise meanings. Check proper names, quoted material and accepted regional spelling before marking an error. A dictionary candidate is a suggestion to verify, not evidence by itself.",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-vocabulary-advanced",
+      "title": "Words in context · 进阶",
+      "language": "en",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "vocabulary",
+      "body": "Judge accuracy and collocation before rarity. Familiar words can express precise meanings. Check proper names, quoted material and accepted regional spelling before marking an error. A dictionary candidate is a suggestion to verify, not evidence by itself. In advanced tasks, also examine the quality of evidence and possible objections. Local grading descriptors must be approved separately.",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-grammar-reference",
+      "title": "Editing after drafting",
+      "language": "en",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "grammar",
+      "body": "Check the tense required by the task, sentence structure, agreement, spelling and punctuation against the confirmed text. Distinguish occasional slips from patterns affecting meaning. Cite the original span and avoid charging the same issue to several dimensions.",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "en-grammar-advanced",
+      "title": "Editing after drafting · 进阶",
+      "language": "en",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "grammar",
+      "body": "Check the tense required by the task, sentence structure, agreement, spelling and punctuation against the confirmed text. Distinguish occasional slips from patterns affecting meaning. Cite the original span and avoid charging the same issue to several dimensions. In advanced tasks, also examine the quality of evidence and possible objections. Local grading descriptors must be approved separately.",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-content-reference",
+      "title": "双语读者与任务目的",
+      "language": "mixed",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "content",
+      "body": "先明确谁是读者，以及任务是否允许两种语言。内容完整性按整篇信息判断，不用某种语言所占比例代替任务完成度。必要时可请作者补充术语解释，但不要求全部翻译。",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-content-advanced",
+      "title": "双语读者与任务目的 · 进阶",
+      "language": "mixed",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "content",
+      "body": "先明确谁是读者，以及任务是否允许两种语言。内容完整性按整篇信息判断，不用某种语言所占比例代替任务完成度。必要时可请作者补充术语解释，但不要求全部翻译。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-coherence-reference",
+      "title": "跨语言保持信息连贯",
+      "language": "mixed",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "coherence",
+      "body": "检查人称、时间和事物指代能否跨句延续。语言切换本身不等于结构断裂；应说明读者在哪里失去了信息联系，并用具体原文举证。",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-coherence-advanced",
+      "title": "跨语言保持信息连贯 · 进阶",
+      "language": "mixed",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "coherence",
+      "body": "检查人称、时间和事物指代能否跨句延续。语言切换本身不等于结构断裂；应说明读者在哪里失去了信息联系，并用具体原文举证。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-expression-reference",
+      "title": "保留有用的语言切换",
+      "language": "mixed",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "expression",
+      "body": "在任务允许时，保留能传达语气或文化含义的表达。给出面向目标读者的解释建议，不把语言身份、口音或方言当作质量等级。",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-expression-advanced",
+      "title": "保留有用的语言切换 · 进阶",
+      "language": "mixed",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "expression",
+      "body": "在任务允许时，保留能传达语气或文化含义的表达。给出面向目标读者的解释建议，不把语言身份、口音或方言当作质量等级。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-vocabulary-reference",
+      "title": "术语、专名与语言边界",
+      "language": "mixed",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "vocabulary",
+      "body": "专名、引语和已允许的跨语言术语可保留。英语拼写候选仅作用于相应词段，中文词语按中文语境检查。不能因为拉丁字母出现就认定该片段一定是英语。",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-vocabulary-advanced",
+      "title": "术语、专名与语言边界 · 进阶",
+      "language": "mixed",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "vocabulary",
+      "body": "专名、引语和已允许的跨语言术语可保留。英语拼写候选仅作用于相应词段，中文词语按中文语境检查。不能因为拉丁字母出现就认定该片段一定是英语。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-grammar-reference",
+      "title": "按片段检查，按整篇解释",
+      "language": "mixed",
+      "gradeMin": 3,
+      "gradeMax": 9,
+      "dimension": "grammar",
+      "body": "先标出可确定的语言片段，再使用相应规则检查句子。无法确定的片段交给教师。跨语言问题只记录一次，并解释对整篇理解的影响。",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing"
+      ]
+    },
+    {
+      "id": "mixed-grammar-advanced",
+      "title": "按片段检查，按整篇解释 · 进阶",
+      "language": "mixed",
+      "gradeMin": 10,
+      "gradeMax": 12,
+      "dimension": "grammar",
+      "body": "先标出可确定的语言片段，再使用相应规则检查句子。无法确定的片段交给教师。跨语言问题只记录一次，并解释对整篇理解的影响。 进阶任务还应核对证据质量、读者预设和反方意见；此为原创建议，具体分值由学校审定。",
+      "sourceIds": [
+        "moe-high-2020",
+        "dfe-writing"
+      ]
+    }
+  ]
+}

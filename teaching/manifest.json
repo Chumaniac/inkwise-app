@@ -1,0 +1,160 @@
+{
+  "release": "starter-2026-10-v1",
+  "reviewStatus": "candidate",
+  "rubrics": [
+    {
+      "id": "zh-g1-2-narrative",
+      "file": "rubrics/zh-g1-2-narrative.json",
+      "sha256": "95ebcae2fd657eb28a7721cf0232fa40e883b6c6e27b590fd9c0e8c2ccf81bd3",
+      "sourceIds": [
+        "moe-zh-2022"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "zh-g3-4-narrative",
+      "file": "rubrics/zh-g3-4-narrative.json",
+      "sha256": "9f3a2118e13ee21435b79cdadcfe5ce135969da363b8b1932ac1e269aacc0fec",
+      "sourceIds": [
+        "moe-zh-2022"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "en-g3-4-short-text",
+      "file": "rubrics/en-g3-4-short-text.json",
+      "sha256": "e6638107fda928d63744480d1aad70bbbd6128e88cc29098812a50e66d085ab8",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing",
+        "dfe-ks2"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "mixed-g3-4-short-text",
+      "file": "rubrics/mixed-g3-4-short-text.json",
+      "sha256": "3528066ac4e5b6209d7769f305819068733a9ddd12a9601deabc39c6d902da18",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing",
+        "dfe-ks2"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "zh-g5-6-narrative",
+      "file": "rubrics/zh-g5-6-narrative.json",
+      "sha256": "f2d09d49644bb8782ec5e1e5f7894250fd763ec72be61ef6be0d662d2c8889b1",
+      "sourceIds": [
+        "moe-zh-2022"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "en-g5-6-short-text",
+      "file": "rubrics/en-g5-6-short-text.json",
+      "sha256": "62a1dd7fafd740b1d2e18f9826dd9af5f395a80ccfd6c6299717870049328ea9",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing",
+        "dfe-ks2"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "mixed-g5-6-short-text",
+      "file": "rubrics/mixed-g5-6-short-text.json",
+      "sha256": "e83d9087462c5811e3103e583cfaa747c9a30ab13c6be4506b381c9de5ec60e3",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing",
+        "dfe-ks2"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "zh-g7-9-narrative",
+      "file": "rubrics/zh-g7-9-narrative.json",
+      "sha256": "c806b5536cf4e02ada36872a674463df9a4b3b694b95e25537eeaca041ae6efe",
+      "sourceIds": [
+        "moe-zh-2022"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "en-g7-9-short-text",
+      "file": "rubrics/en-g7-9-short-text.json",
+      "sha256": "d635e78cbe2f045f5aee7e205ae6a11ec581c02e1d554aeafd3b5d18d5dd26ee",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing",
+        "dfe-ks2"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "mixed-g7-9-short-text",
+      "file": "rubrics/mixed-g7-9-short-text.json",
+      "sha256": "4261b8a7bbac9326902fe4199d5bca1dae2e0547b0c6ac9790941c8409cc042b",
+      "sourceIds": [
+        "moe-en-2022",
+        "dfe-writing",
+        "dfe-ks2"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "zh-g10-12-argumentative",
+      "file": "rubrics/zh-g10-12-argumentative.json",
+      "sha256": "3074ee1b27f6fe23ba568df3f80ebc675b867310848695f2338a0db210d090bb",
+      "sourceIds": [
+        "inkwise-original"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "en-g10-12-argumentative",
+      "file": "rubrics/en-g10-12-argumentative.json",
+      "sha256": "ab77540397454d5fae956e98423cc2aa8a1eaf59b3b594363b6e00021fbd356e",
+      "sourceIds": [
+        "inkwise-original"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    },
+    {
+      "id": "mixed-g10-12-argumentative",
+      "file": "rubrics/mixed-g10-12-argumentative.json",
+      "sha256": "6c87809899ec400c2ec95ff1b9bce04362abcf97ab157bfb1094632ad636aede",
+      "sourceIds": [
+        "inkwise-original"
+      ],
+      "status": "draft",
+      "schoolApproved": false
+    }
+  ],
+  "examplesFile": "examples.json",
+  "lexiconFile": "third_party/codespell/en-candidates.json",
+  "lexiconSha256": "1efc1176ab39f1bf1d234ba4eaafb6e0f9d4b5b46e6bb8974a49a8e1f54145dc",
+  "lexiconEntries": 6000,
+  "supplementalLexicons": [
+    {
+      "file": "lexicons/zh-candidates.json",
+      "sha256": "f43137c6fbb459de58569665d3231b2658398500111f94ed5cdff5dc171dadd1",
+      "entries": 34,
+      "language": "zh"
+    }
+  ]
+}

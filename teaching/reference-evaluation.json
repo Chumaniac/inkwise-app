@@ -1,0 +1,156 @@
+{
+  "provenance": "Project-authored relevance labels for original public-reference cards; engineering evaluation, not independent teacher gold.",
+  "k": 3,
+  "queries": [
+    {
+      "id": "zh-content",
+      "language": "zh",
+      "grade": 7,
+      "rubricId": "chinese-demo",
+      "query": "是否围绕题目中心选择事实和事例？",
+      "relevance": {
+        "zh-content-reference": 3
+      }
+    },
+    {
+      "id": "en-content",
+      "language": "en",
+      "grade": 7,
+      "rubricId": "english-demo",
+      "query": "How can the writer address the task purpose and audience?",
+      "relevance": {
+        "en-content-reference": 3
+      }
+    },
+    {
+      "id": "mixed-content",
+      "language": "mixed",
+      "grade": 7,
+      "rubricId": "mixed-demo",
+      "query": "文章怎样兼顾双语读者与写作目的？",
+      "relevance": {
+        "mixed-content-reference": 3
+      }
+    },
+    {
+      "id": "zh-coherence",
+      "language": "zh",
+      "grade": 7,
+      "rubricId": "chinese-demo",
+      "query": "如何安排段落顺序并把信息连接清楚？",
+      "relevance": {
+        "zh-coherence-reference": 3
+      }
+    },
+    {
+      "id": "en-coherence",
+      "language": "en",
+      "grade": 7,
+      "rubricId": "english-demo",
+      "query": "How should paragraphs and transitions organise a short story?",
+      "relevance": {
+        "en-coherence-reference": 3
+      }
+    },
+    {
+      "id": "mixed-coherence",
+      "language": "mixed",
+      "grade": 7,
+      "rubricId": "mixed-demo",
+      "query": "中英文切换后怎样保持段落间的逻辑连贯？",
+      "relevance": {
+        "mixed-coherence-reference": 3
+      }
+    },
+    {
+      "id": "zh-expression",
+      "language": "zh",
+      "grade": 7,
+      "rubricId": "chinese-demo",
+      "query": "如何用具体细节和理由让表达更清楚？",
+      "relevance": {
+        "zh-expression-reference": 3
+      }
+    },
+    {
+      "id": "en-expression",
+      "language": "en",
+      "grade": 7,
+      "rubricId": "english-demo",
+      "query": "How can specific details and explanations support a personal voice?",
+      "relevance": {
+        "en-expression-reference": 3
+      }
+    },
+    {
+      "id": "mixed-expression",
+      "language": "mixed",
+      "grade": 7,
+      "rubricId": "mixed-demo",
+      "query": "哪些中英语言切换有助于保留原有表达声音？",
+      "relevance": {
+        "mixed-expression-reference": 3
+      }
+    },
+    {
+      "id": "zh-vocabulary",
+      "language": "zh",
+      "grade": 7,
+      "rubricId": "chinese-demo",
+      "query": "如何准确选词并保留个人用语？",
+      "relevance": {
+        "zh-vocabulary-reference": 3
+      }
+    },
+    {
+      "id": "en-vocabulary",
+      "language": "en",
+      "grade": 7,
+      "rubricId": "english-demo",
+      "query": "How can precise vocabulary fit the context without penalising names?",
+      "relevance": {
+        "en-vocabulary-reference": 3
+      }
+    },
+    {
+      "id": "mixed-vocabulary",
+      "language": "mixed",
+      "grade": 7,
+      "rubricId": "mixed-demo",
+      "query": "怎样处理双语术语和专名，不因切换扣分？",
+      "relevance": {
+        "mixed-vocabulary-reference": 3
+      }
+    },
+    {
+      "id": "zh-grammar",
+      "language": "zh",
+      "grade": 7,
+      "rubricId": "chinese-demo",
+      "query": "如何核对句子与标点，同时保留学生实际错字？",
+      "relevance": {
+        "zh-grammar-reference": 3
+      }
+    },
+    {
+      "id": "en-grammar",
+      "language": "en",
+      "grade": 7,
+      "rubricId": "english-demo",
+      "query": "What sentence and punctuation checks should follow drafting?",
+      "relevance": {
+        "en-grammar-reference": 3
+      }
+    },
+    {
+      "id": "mixed-grammar",
+      "language": "mixed",
+      "grade": 7,
+      "rubricId": "mixed-demo",
+      "query": "如何分别核对中英文语法并解释整篇意义？",
+      "relevance": {
+        "mixed-grammar-reference": 3
+      }
+    }
+  ]
+}

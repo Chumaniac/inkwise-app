@@ -1,0 +1,21 @@
+{
+  "id": "mixed-policy-example",
+  "release": "reference-v1",
+  "mode": "mixed",
+  "allowedLanguages": [
+    "zh",
+    "en"
+  ],
+  "protectedTerms": [],
+  "allowForeignQuotes": true,
+  "spellingVariants": [
+    "en-US",
+    "en-GB"
+  ],
+  "languageWeights": {
+    "zh": 0.5,
+    "en": 0.5
+  },
+  "source": "Inkwise原创配置示例，需学校审核；方言词仅示范字段，不是完整方言词典。",
+  "approved": false
+}

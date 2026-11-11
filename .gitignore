@@ -1,0 +1,35 @@
+.venv/
+__pycache__/
+*.pyc
+.env*
+!.env.example
+.DS_Store
+.pytest_cache/
+.dvc/cache/
+data/private/
+/artifacts/
+*.sqlite*
+*.db
+node_modules/
+.sites-runtime/
+knowledge/artifacts/**/*.json
+knowledge/releases/**/active.json
+knowledge/releases/**/*.json
+knowledge/releases/**/history/
+.dvc/tmp/
+.dvc/config.local
+
+# Native build output
+desktop/build/
+
+# Community distribution build outputs and private runtime
+release/
+.runtime/
+*.app/
+*.sqlite3*
+*.db
+*.log
+.local/
+
+# Never publish a local target directory or build-cache link
+/target

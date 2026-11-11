@@ -1,0 +1,11 @@
+{
+  "edition": "community-user",
+  "sourceRevision": "40775801b1e7063c2cd0f750a2c90af79fc51deb",
+  "snapshotDate": "2026-11-11",
+  "historyIncluded": false,
+  "excludedCategories": [
+    "internal delivery evidence",
+    "agent instructions",
+    "private deployment and knowledge artifacts"
+  ]
+}

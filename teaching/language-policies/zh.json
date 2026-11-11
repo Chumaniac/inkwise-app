@@ -1,0 +1,16 @@
+{
+  "id": "zh-policy-example",
+  "release": "reference-v1",
+  "mode": "zh",
+  "allowedLanguages": [
+    "zh"
+  ],
+  "protectedTerms": [],
+  "allowForeignQuotes": true,
+  "spellingVariants": [],
+  "languageWeights": {
+    "zh": 1.0
+  },
+  "source": "Inkwise原创配置示例，需学校审核；方言词仅示范字段，不是完整方言词典。",
+  "approved": false
+}

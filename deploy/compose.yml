@@ -1,0 +1,75 @@
+name: inkwise
+x-app: &app
+  build:
+    context: ..
+  image: inkwise-k12:0.5.1
+  env_file: .env
+  environment:
+    INKWISE_DATABASE_URL: postgresql+psycopg://inkwise:${INKWISE_DB_PASSWORD:?set an operator-managed password}@postgres:5432/inkwise
+    INKWISE_DATA_DIR: /app/data/private
+    INKWISE_RUBRIC_DIR: /app/knowledge/releases
+    INKWISE_NEO4J_URI: bolt://neo4j:7687
+    INKWISE_NEO4J_USER: neo4j
+    INKWISE_NEO4J_PASSWORD: ${INKWISE_NEO4J_PASSWORD:?set an operator-managed password}
+    INKWISE_CHROMA_HOST: chroma
+    INKWISE_CHROMA_PORT: 8000
+  volumes:
+    - app-data:/app/data
+    - knowledge:/app/knowledge
+  restart: unless-stopped
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  depends_on:
+    postgres:
+      condition: service_healthy
+services:
+  api:
+    <<: *app
+    ports: ["127.0.0.1:8766:8766"]
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8766/health/ready',timeout=3)"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+  worker:
+    <<: *app
+    command: ["/app/.venv/bin/inkwise", "worker"]
+    mem_limit: 1g
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: inkwise
+      POSTGRES_USER: inkwise
+      POSTGRES_PASSWORD: ${INKWISE_DB_PASSWORD:?set an operator-managed password}
+    volumes: ["postgres:/var/lib/postgresql/data"]
+    restart: unless-stopped
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inkwise -d inkwise"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  neo4j:
+    image: neo4j:5.26-community
+    environment:
+      NEO4J_AUTH: neo4j/${INKWISE_NEO4J_PASSWORD:?set an operator-managed password}
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    volumes: ["neo4j:/data"]
+    restart: unless-stopped
+    mem_limit: 1536m
+  chroma:
+    image: chromadb/chroma:1.5.9
+    environment:
+      ANONYMIZED_TELEMETRY: "false"
+    volumes: ["chroma:/data"]
+    restart: unless-stopped
+    mem_limit: 1g
+volumes:
+  app-data:
+  knowledge:
+  postgres:
+  neo4j:
+  chroma:
