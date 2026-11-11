@@ -135,11 +135,11 @@ def main() -> int:
     parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--no-open', action='store_true')
     parser.add_argument('--start-model', action='store_true')
-    parser.add_argument('--model-profile', choices=['qwen2.5-7b', 'deepseek-r1-7b'], default='qwen2.5-7b', help='Only used when creating a new private workspace')
-    parser.add_argument('--show-setup', action='store_true', help='Show local setup guidance when a model is unavailable')
+    parser.add_argument('--model-profile', choices=['qwen2.5-7b', 'deepseek-r1-7b'], default='qwen2.5-7b', help='仅在创建新的私人工作区时使用')
+    parser.add_argument('--show-setup', action='store_true', help='模型不可用时显示本机配置指引')
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--stop', action='store_true')
-    parser.add_argument('--upgrade-check', action='store_true', help='Read-only selected workspace compatibility check; no model or API start')
+    parser.add_argument('--upgrade-check', action='store_true', help='只读检查所选工作区兼容性，不启动模型或 API')
     parser.add_argument('--backup-file', type=Path)
     args = parser.parse_args()
     data = args.data_dir.expanduser().absolute()
@@ -151,7 +151,7 @@ def main() -> int:
         if not owned_process(state):
             raise SystemExit('LOCAL_APP_PROCESS_CHANGED; no process stopped')
         os.kill(state['pid'], signal.SIGTERM)
-        print('Local workspace stop requested; saved data is retained.')
+        print('已请求停止本地工作区；已保存数据会保留。')
         return 0
     if not 1024 <= args.port <= 65535:
         raise SystemExit('LOCAL_PORT_INVALID')
@@ -162,7 +162,7 @@ def main() -> int:
         state = json.loads(running.read_text())
         if owned_process(state):
             url = f'http://127.0.0.1:{int(state["port"])}/workspace/'
-            print('Local workspace already running: ' + url)
+            print('本地工作区已在运行： ' + url)
             if not args.no_open and not args.check:
                 webbrowser.open(url)
             return 0
@@ -235,7 +235,7 @@ def main() -> int:
         except DomainError:
             raise SystemExit('LOCAL_PORT_UNAVAILABLE; existing service left unchanged') from None
         url = f'http://127.0.0.1:{args.port}/workspace/'
-        print(f'Open {url}\nTeacher access file: {data / "teacher-access.txt"}\nCtrl+C stops this app and its owned model process.', flush=True)
+        print(f'打开 {url}\n教师访问文件：{data / "teacher-access.txt"}\n按 Ctrl+C 停止本应用及其管理的模型进程。', flush=True)
         from inkwise.cli import write_private
         write_private(running, json.dumps({'pid': os.getpid(), 'started': process_stamp(os.getpid()), 'port': args.port}))
         def open_when_ready():
@@ -275,6 +275,6 @@ if __name__ == '__main__':
     try:
         raise SystemExit(main())
     except (ValueError, OSError, DomainError):
-        raise SystemExit('LOCAL_DISTRIBUTION_OR_RUNTIME_INVALID; no private values printed') from None
+        raise SystemExit('本地程序或运行环境不可用（LOCAL_DISTRIBUTION_OR_RUNTIME_INVALID）；未输出私人配置') from None
     except KeyboardInterrupt:
         raise SystemExit(0) from None

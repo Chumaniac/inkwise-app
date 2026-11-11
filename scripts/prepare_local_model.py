@@ -102,7 +102,7 @@ def install(cache):
     environment = {**os.environ, 'OLLAMA_HOST': '127.0.0.1:11434', 'NO_PROXY': '127.0.0.1,localhost,::1'}
     subprocess.run([executable, 'create', MODEL, '-f', str(modelfile)], env=environment,
                    cwd=cache, check=True, timeout=300)
-    print('Local scoring model prepared. Existing models and saved reports retained.')
+    print('本地评分模型已准备完成；已有模型和已保存报告均保留。')
 
 
 def main():

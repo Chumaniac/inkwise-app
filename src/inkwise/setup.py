@@ -308,7 +308,7 @@ def run_local(env_file: Path, port: int) -> int:
         children.append(subprocess.Popen(command + ["worker"]))
         if settings.evolution_enabled:
             children.append(subprocess.Popen(command+["evolution-worker","--tenant",settings.evolution_tenant]))
-        print(f"Local workspace: http://127.0.0.1:{port}/workspace/ (Ctrl+C stops API and worker)", flush=True)
+        print(f"本地工作区：http://127.0.0.1:{port}/workspace/（按 Ctrl+C 停止 API 和 worker）", flush=True)
         while all(child.poll() is None for child in children):
             time.sleep(0.25)
         return next((child.returncode or 1 for child in children if child.poll() is not None), 1)

@@ -64,7 +64,7 @@
           <article class="panel agent"><span class="agent-number">03</span><h2>分项评阅</h2><h3>五维独立评分</h3><p>按内容、结构、表达、词汇与语法逐项评估，每个判断关联规则与原文。</p></article>
           <article class="panel agent"><span class="agent-number">04</span><h2>证据复核</h2><h3>解释、质疑与修订</h3><p>检查证据和重复扣分，最多两轮修订；存在关键分歧时停止自动判断。</p></article>
         </div>
-        <section class="panel architecture"><h2>规则与案例，双路检索</h2><div class="dual"><div><small>STRUCTURED</small><h3>Neo4j 规则图谱</h3><p>年级 → 体裁 → 维度 → 条件与例外</p></div><span>＋</span><div><small>SEMANTIC</small><h3>ChromaDB 语义案例</h3><p>BGE-M3 嵌入 · 同语言与年级锚点</p></div></div><p>适用规则先精确加载；参考证据经 RRF 融合。检索失败时保留校对与教师复核，规则缺失时停止出分。</p></section>
+        <section class="panel architecture"><h2>规则与案例，双路检索</h2><div class="dual"><div><small>结构化规则</small><h3>Neo4j 规则图谱</h3><p>年级 → 体裁 → 维度 → 条件与例外</p></div><span>＋</span><div><small>语义案例</small><h3>ChromaDB 语义案例</h3><p>BGE-M3 嵌入 · 同语言与年级锚点</p></div></div><p>适用规则先精确加载；参考证据经 RRF 融合。检索失败时保留校对与教师复核，规则缺失时停止出分。</p></section>
         <section class="panel scope"><h2>此刻可以体验什么</h2><div class="scope-grid"><div><h3>公开演示</h3><p>四类合成案例、文字与图片本机预览、五维报告、规则证据、教师修订、报告导出、会话候选回流。</p></div><div><h3>真实后台</h3><p>私有仓库已实现持久 API、权限、OCR、双路检索、LangGraph、Kafka 和知识版本，并完成本机组件验证。<a href="engineering-status.html" target="_blank" rel="noopener">查看工程进展与真实验证</a></p></div><div><h3>正式接入前</h3><p>公开站点尚未连接真实后台。正式使用还需确认部署位置、学校量规、授权样本和教师评估；当前演示不签发真实学生成绩。</p></div></div></section>
         <p class="source-note">架构参考：<a href="https://arxiv.org/abs/2506.13037" target="_blank" rel="noopener">MAGIC</a> · <a href="https://arxiv.org/abs/2505.13965" target="_blank" rel="noopener">CAFES</a> · <a href="https://github.com/therealthapa/NESA" target="_blank" rel="noopener">NESA</a>。论文结果不代表本产品效果；1.5 秒是受理目标，非长文完整批改实测。</p>
       </section>

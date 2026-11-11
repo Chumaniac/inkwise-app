@@ -582,7 +582,7 @@ async function loadEvents(){
   eventCursor=Math.max(eventCursor,data.nextCursor||0,...fresh.map(item=>item.id));
   $('events').replaceChildren();
   const names={'revision.created':'修订稿已创建','revision.saved':'修订稿已保存','revision.confirmed':'修改记录已确认','job.created':'任务已创建','image.attached':'原稿已保存','text.confirmed':'原文已确认','retrieval.started':'检索适用规则与案例','scoring.started':'五维独立评分','reflection.started':'复核评分依据','revision.started':'修订争议维度','arbitration.completed':'完成冲突检查','report.approved':'教师已确认','candidate.submitted':'已提交案例候选','candidate.approved':'案例候选已通过独立审核','candidate.rejected':'案例候选已退回修改','candidate.revised':'案例候选已修订并重新提交','candidate.withdrawn':'案例候选已撤回','candidate.published':'案例候选已入库','job.cancelled':'任务已取消','job.retry_requested':'已请求恢复处理'};
-  for(const item of eventItems)$('events').append(node('li',`${names[item.event]||states[item.event]||'处理状态已更新'} · ${new Date(item.createdAt).toLocaleTimeString()}`));
+  for(const item of eventItems)$('events').append(node('li',`${names[item.event]||states[item.event]||'处理状态已更新'} · ${new Date(item.createdAt).toLocaleTimeString('zh-CN',{hour12:false})}`));
   controlDisabled('events-more',!data.hasMore);
   $('events-page').textContent=`已读取 ${eventCount} 条，显示最近 ${eventItems.length} 条。${data.hasMore?'还有后续记录，请继续读取。':'已读取至本次查询的最新记录。'}`;
   const stage=[...eventItems].reverse().find(item=>['retrieval.started','scoring.started','reflection.started','revision.started','arbitration.completed'].includes(item.event));
