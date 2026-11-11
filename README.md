@@ -10,6 +10,8 @@
 
 前提：Python 3.12、uv；本机评分需另装 Ollama 与指定模型。macOS 原生 OCR 构建需要 Xcode Command Line Tools。
 
+先按[本机模型配置](docs/local-model-setup.md)准备 Ollama 与 `inkwise-qwen-local`。`--start-model` 只启动已安装的服务，不下载或创建评分模型。
+
 ```sh
 git clone https://github.com/Chumaniac/inkwise-app.git
 cd inkwise-app
