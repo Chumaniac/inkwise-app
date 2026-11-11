@@ -13,6 +13,7 @@ const record = {
   },
 };
 assert.equal(parseHistory(null).length, 0);
+assert.throws(() => parseHistory(""), /原记录已保留/);
 assert.equal(
   parseHistory(JSON.stringify({ version: 1, items: [record] })).length,
   1,

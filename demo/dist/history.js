@@ -1,7 +1,8 @@
 import { samples } from "./data.js";
 export const HISTORY_KEY = "inkwise.demo.history.v1";
 export function parseHistory(raw) {
-  if (!raw) return [];
+  if (raw === null) return [];
+  if (!raw) throw Error("演示历史格式不正确，原记录已保留。");
   if (raw.length > 400000) throw Error("演示历史超过容量限制，原记录已保留。");
   const value = JSON.parse(raw);
   if (

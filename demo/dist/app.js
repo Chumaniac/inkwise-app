@@ -1,13 +1,14 @@
 import {HISTORY_KEY,parseHistory} from './history.js';
 import {samples,rules,dimensions,codePointLength,detectLanguage,analyzeInput} from './data.js';
 const $=id=>document.getElementById(id);
+let draftChanged=false;
 let current='zh', report=null, confirmed=false, candidates=[], imageUrl=null, toastTimer=null;
 function el(tag,text,cls){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;}
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4200);}
 function updateCount(){$('char-count').textContent=`${codePointLength($('essay').value).toLocaleString()} / 15,000 字符`;$('language-label').textContent=detectLanguage($('essay').value);}
 function activePolicy(){return $('policy').value==='auto'?samples[current].policy:$('policy').value;}
-function invalidate(){report=null;confirmed=false;$('report-state').textContent='等待重新评阅';$('report').replaceChildren(el('div','原文或规则已更改。请核对文字后重新评阅；原报告不会继续用于确认。','pending'));$('input-error').textContent='';updateCount();}
-function loadSample(){const sample=samples[current];$('essay-title').value=sample.title;$('essay').value=sample.text;$('policy').value='auto';$('rubric-label').textContent=sample.rubric;$('text-confirmed').checked=true;clearImage();updateCount();makeReport(true);}
+function invalidate(){draftChanged=true;report=null;confirmed=false;$('report-state').textContent='等待重新评阅';$('report').replaceChildren(el('div','原文或规则已更改。请核对文字后重新评阅；原报告不会继续用于确认。','pending'));$('input-error').textContent='';updateCount();}
+function loadSample(){draftChanged=false;const sample=samples[current];$('essay-title').value=sample.title;$('essay').value=sample.text;$('policy').value='auto';$('rubric-label').textContent=sample.rubric;$('text-confirmed').checked=true;clearImage();updateCount();makeReport(true);}
 function makeReport(preview=false){
   try {
     const text=$('essay').value, stats=analyzeInput(text);
@@ -57,6 +58,7 @@ function approveReport(){
   if(values.some(v=>v==='')||scores.some((v,i)=>!Number.isInteger(v)||v<0||v>report.weights[i])){toast('请为五个维度填写范围内的整数分数。');return;}
   const comment=$('teacher-comment').value.trim();
   if((!report.scores||scores.some((v,i)=>v!==report.scores[i]))&&!comment){toast('修改或填写评分时，请写明教师判断依据。');return;}
+  draftChanged=true;
   report={...report,scores,comment,approved:true,approvedAt:new Date().toISOString()};confirmed=true;$('report-state').textContent='已确认 · 仅当前会话';
   const hero=$('report').querySelector('.scorecircle');hero.querySelector('strong').textContent=scores.reduce((a,b)=>a+b,0);hero.querySelector('small').textContent='确认 / 100';
   $('report').querySelectorAll('.dimension').forEach((row,i)=>{row.querySelector('progress').value=scores[i];row.querySelector('b').textContent=`${scores[i]}/${report.weights[i]}`;});
@@ -74,8 +76,16 @@ function renderKnowledge(){const root=$('rules-list');root.replaceChildren();for
 function clearImage(){if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=null;$('image-preview').removeAttribute('src');$('image-preview').hidden=true;$('clear-image').hidden=true;$('image-input').value='';}
 $('image-input').addEventListener('change',()=>{const file=$('image-input').files[0];if(!file)return;if(!['image/png','image/jpeg'].includes(file.type)||file.size>10*1024*1024){clearImage();toast('请选择不超过 10 MB 的 PNG 或 JPEG 图片。');return;}if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=URL.createObjectURL(file);$('image-preview').src=imageUrl;$('image-preview').hidden=false;$('clear-image').hidden=false;$('text-confirmed').checked=false;invalidate();toast('图片仅供本机预览。请手工转写并核对原文。');});
 $('clear-image').addEventListener('click',clearImage);$('image-preview').addEventListener('error',()=>{clearImage();toast('图片无法解码，请换一张有效图片。');});
-$('sample').addEventListener('change',()=>{current=$('sample').value;loadSample();});$('essay').addEventListener('input',()=>{$('text-confirmed').checked=false;invalidate();});$('essay-title').addEventListener('input',invalidate);$('policy').addEventListener('change',()=>{$('rubric-label').textContent='语言规则已切换 · 需教师确认量规';invalidate();});$('text-confirmed').addEventListener('change',()=>{if(!$('text-confirmed').checked)invalidate();});$('grade').addEventListener('click',()=>makeReport());
-$('reset').addEventListener('click',()=>{current='zh';$('sample').value='zh';candidates=[];loadSample();renderKnowledge();toast('当前编辑已重置；已保存历史保留，可单独清除。');});
+$('report').addEventListener('input',()=>{draftChanged=true;});
+$('sample').addEventListener('change',()=>{
+  if((draftChanged||imageUrl)&&!window.confirm('换用所选案例并放弃当前原文和复核编辑？')){
+    $('sample').value=current;
+    return;
+  }
+  current=$('sample').value;
+  loadSample();
+});$('essay').addEventListener('input',()=>{$('text-confirmed').checked=false;invalidate();});$('essay-title').addEventListener('input',invalidate);$('policy').addEventListener('change',()=>{$('rubric-label').textContent='语言规则已切换 · 需教师确认量规';invalidate();});$('text-confirmed').addEventListener('change',()=>{if(!$('text-confirmed').checked)invalidate();});$('grade').addEventListener('click',()=>makeReport());
+$('reset').addEventListener('click',()=>{if((draftChanged||imageUrl||candidates.length)&&!window.confirm('重置当前编辑和本次候选池？已保存历史会保留。'))return;current='zh';$('sample').value='zh';candidates=[];loadSample();renderKnowledge();toast('当前编辑已重置；已保存历史保留，可单独清除。');});
 document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{const view=button.dataset.view;document.querySelectorAll('.view').forEach(node=>node.hidden=node.id!==`${view}-view`);document.querySelectorAll('[data-view]').forEach(node=>{node.classList.toggle('active',node===button);if(node===button)node.setAttribute('aria-current','page');else node.removeAttribute('aria-current');});$('breadcrumb').textContent=button.textContent.replace(/[▤▦◇]/g,'').trim();}));
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'&&!$('work-view').hidden){e.preventDefault();makeReport();}});
 window.addEventListener('pagehide',()=>{clearImage();clearTimeout(toastTimer);});loadSample();renderKnowledge();
@@ -85,7 +95,7 @@ try{demoHistory=parseHistory(sessionStorage.getItem(HISTORY_KEY));}catch(error){
 function renderDemoHistory(){
  $('demo-history-list').replaceChildren();
  for(const item of demoHistory){const row=el('article',undefined,'history-row'),open=el('button','打开报告','button secondary'),download=el('button','导出 JSON','button secondary');row.append(el('strong',item.report.title),el('span',`${item.report.scores?item.report.scores.reduce((a,b)=>a+b,0)+' 分':'待评定'} · ${item.report.approved?'已确认演示':'待复核'} · ${new Date(item.savedAt).toLocaleString('zh-CN')}`));
- open.addEventListener('click',()=>{if(!window.confirm('载入这份已保存报告？当前未保存编辑将被替换。'))return;const match=Object.entries(samples).find(([,s])=>s.text===item.report.text);current=match[0];$('sample').value=current;$('essay-title').value=item.report.title;$('essay').value=item.report.text;$('policy').value=item.report.policy;$('text-confirmed').checked=true;clearImage();updateCount();report=structuredClone(item.report);confirmed=report.approved;renderReport();$('report-state').textContent='已载入历史 · '+(confirmed?'当时已确认':'待教师复核');$('report-heading').scrollIntoView({block:'start'});});
+ open.addEventListener('click',()=>{if(!window.confirm('载入这份已保存报告？当前未保存编辑将被替换。'))return;const match=Object.entries(samples).find(([,s])=>s.text===item.report.text);draftChanged=false;current=match[0];$('sample').value=current;$('essay-title').value=item.report.title;$('essay').value=item.report.text;$('policy').value=item.report.policy;$('text-confirmed').checked=true;clearImage();updateCount();report=structuredClone(item.report);confirmed=report.approved;renderReport();$('report-state').textContent='已载入历史 · '+(confirmed?'当时已确认':'待教师复核');$('report-heading').scrollIntoView({block:'start'});});
  download.addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(item,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='inkwise-saved-report.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});row.append(open,download);$('demo-history-list').append(row);}
  if(!demoHistory.length&&!historyInvalid)$('demo-history-state').textContent='尚未保存合成报告。';
  $('save-demo-report').disabled=historyInvalid;
@@ -93,7 +103,8 @@ function renderDemoHistory(){
 $('save-demo-report').addEventListener('click',()=>{try{
  if(!report||report.mode!=='synthetic-example')throw Error('历史仅保存合成案例。自定义内容请直接导出。');
  const copy=structuredClone(report);if(!confirmed){copy.comment=$('teacher-comment')?.value||'';const values=dimensions.map((_,i)=>$(`score-${i}`).value);if(!values.every((v,i)=>v!==''&&Number.isInteger(Number(v))&&Number(v)>=0&&Number(v)<=copy.weights[i]))throw Error('请为五个维度填写范围内的整数分数，再保存报告。');copy.scores=values.map(Number);}
- const next=[{id:crypto.randomUUID(),savedAt:new Date().toISOString(),report:copy},...demoHistory].slice(0,10),raw=JSON.stringify({version:1,items:next});parseHistory(raw);sessionStorage.setItem(HISTORY_KEY,raw);demoHistory=next;renderDemoHistory();$('demo-history-state').textContent='已保存合成报告，关闭标签页前可导出。';
+ const latestHistory=parseHistory(sessionStorage.getItem(HISTORY_KEY));
+ const next=[{id:crypto.randomUUID(),savedAt:new Date().toISOString(),report:copy},...latestHistory].slice(0,10),raw=JSON.stringify({version:1,items:next});parseHistory(raw);sessionStorage.setItem(HISTORY_KEY,raw);demoHistory=next;draftChanged=false;renderDemoHistory();$('demo-history-state').textContent='已保存合成报告，关闭标签页前可导出。';
  }catch(error){$('demo-history-state').textContent=error.message;}});
 $('clear-demo-history').addEventListener('click',()=>{if(!window.confirm('清除本标签页保存的演示历史？'))return;try{sessionStorage.removeItem(HISTORY_KEY);demoHistory=[];historyInvalid=false;renderDemoHistory();}catch{$('demo-history-state').textContent='清除失败，请检查浏览器存储权限。';}});
 renderDemoHistory();
