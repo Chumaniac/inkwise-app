@@ -33,3 +33,8 @@ release/
 
 # Never publish a local target directory or build-cache link
 /target
+
+# Local model downloads and resumable parts
+*.gguf
+*.gguf.part
+/models/
