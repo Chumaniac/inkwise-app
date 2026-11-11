@@ -166,9 +166,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def ready(db=DB):
         db.execute(select(Identity.id).limit(1))
         db.execute(select(WritingRevision.id).limit(1))
+        return {"status": "ready"}
+
+    @app.get("/api/v1/runtime-status")
+    def runtime_status(user: User):
         from inkwise.settings import model_configured
         from inkwise.ocr import ocr_configured
-        return {"status":"ready","modelConfigured":model_configured(settings),"ocrConfigured":ocr_configured(settings)}
+        return {"modelConfigured": model_configured(settings), "ocrConfigured": ocr_configured(settings)}
 
     @app.get("/api/v1/me")
     def me(user: User):

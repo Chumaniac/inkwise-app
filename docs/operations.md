@@ -98,7 +98,7 @@ docker compose --env-file deploy/.env -f deploy/compose.yml run --rm api /app/.v
 docker compose --env-file deploy/.env -f deploy/compose.yml up -d api worker
 ```
 
-容器中 `127.0.0.1` 指容器自身。模型/OCR/嵌入服务地址必须按部署网络改为可访问地址；不自动把宿主机服务改成公网监听。健康响应的 `modelConfigured` 只说明配置存在，不代表供应商已经通过验收。
+容器中 `127.0.0.1` 指容器自身。模型/OCR/嵌入服务地址必须按部署网络改为可访问地址；不自动把宿主机服务改成公网监听。公开的 `/health/ready` 仅报告数据库就绪。教师工作台登录后通过 `/api/v1/runtime-status` 查看模型与 OCR 配置状态，真实评分结果以任务回执为准。
 
 ## Kafka 长文
 
