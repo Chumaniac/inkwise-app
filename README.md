@@ -1,14 +1,22 @@
-# 墨评 · 独立用户版
+<img src="demo/dist/assets/mark.svg" width="56" height="56" alt="" />
 
-界面与首次使用引导默认使用中文；产品名、命令、文件名和原始业务内容保留原文。
+# 墨评 Inkwise
 
-把作文原文、评分依据、教师复核与报告放在同一个本地工作区。
+[![Build](https://github.com/Chumaniac/inkwise-app/actions/workflows/user-edition.yml/badge.svg?branch=main)](https://github.com/Chumaniac/inkwise-app/actions/workflows/user-edition.yml) [![License](https://img.shields.io/badge/license-MIT-555)](LICENSE)
 
-分数绑定身份、作业、已确认原文、量规版本和模型版本；缺少原文依据或必要规则会阻断评分。教师终评与案例授权是独立操作。
+逐段核对作文原文、评分依据与教师终评。
 
-这是包含完整可构建源码的社区用户仓库，不依赖原私有仓库。旧仓库的提交历史、用户数据、模型缓存和内部验收记录不在这里。
+[在线试用](https://chumaniac.github.io/inkwise-app/) · [桌面下载](https://github.com/Chumaniac/inkwise-app/releases)
 
-## 开始使用
+网页版使用合成作文。选择案例、确认原文、检查引用，再保存复核结果。自定义文本可以用于人工复核，网页不会生成模型分数。
+
+## 核心功能
+
+- 对照原文和量规查看每个维度的依据。
+- 标记需要复核的段落，保留教师修改。
+- 桌面版可连接本机评分服务，并导出绑定原文版本的报告。
+
+## 本机快速开始
 
 前提：Python 3.12、uv；本机评分需另装 Ollama 与指定模型。macOS 原生 OCR 构建需要 Xcode Command Line Tools。
 
@@ -23,7 +31,7 @@ uv sync --frozen --no-dev --python 3.12
 
 浏览器只连接本机回环地址。桌面版下载与系统支持以 [Releases](https://github.com/Chumaniac/inkwise-app/releases) 的实际资产为准；没有对应资产时从源码安装。桌面构建方式见 [构建说明](docs/build.md)。
 
-## 用一次完整流程
+## 操作步骤
 
 新作业/上传原稿 → 确认文字 → 真实评分 → 教师逐项复核 → 导出绑定原文版本的报告
 
@@ -50,3 +58,9 @@ macOS：~/Library/Application Support/InkwiseK12/workspace；其他系统：~/.l
 - [参考项目与许可](docs/references.md)
 
 许可证见 [LICENSE](LICENSE)，第三方资料见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## 常见问题
+
+**网页需要密钥吗？** 不需要。公开示例在浏览器内处理。本机评分的模型、工作区目录和访问方式见[配置说明](docs/local-model-setup.md)。
+
+[参与贡献](CONTRIBUTING.md)
