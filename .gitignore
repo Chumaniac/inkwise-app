@@ -10,7 +10,7 @@ data/private/
 /artifacts/
 *.sqlite*
 *.db
-node_modules/
+node_modules
 .sites-runtime/
 knowledge/artifacts/**/*.json
 knowledge/releases/**/active.json

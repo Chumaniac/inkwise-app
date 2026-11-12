@@ -847,3 +847,12 @@ for(const code of ['STORAGE_CAPACITY_EXCEEDED','IMAGE_STORAGE_CAPACITY_EXCEEDED'
   assert.equal(reads[1].aborted, true);
   console.log('PASS: superseded and timed-out original image reads release their streams');
 }
+
+{
+ const app=workspace(async()=>response({}));
+ app.run('showQueue(true)');
+ assert.equal(app.element('workspace').dataset.queue,'open');
+ app.run('logout()');
+ assert.equal(app.element('workspace').dataset.queue,'closed');
+ console.log('PASS: logout closes the mobile classroom queue before another login');
+}
