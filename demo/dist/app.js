@@ -5,6 +5,8 @@ let draftChanged=false;
 let current='zh', report=null, confirmed=false, candidates=[], imageUrl=null, toastTimer=null;
 function el(tag,text,cls){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;}
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4200);}
+function setReviewPane(pane, focus=false){document.querySelector('.workspace').dataset.pane=pane;for(const key of ['paper','review'])$('pane-'+key).setAttribute('aria-pressed',String(key===pane));if(focus)$(pane==='paper'?'essay-heading':'report-heading').focus();}
+for(const key of ['paper','review'])$('pane-'+key).onclick=()=>setReviewPane(key,true);
 function updateCount(){$('char-count').textContent=`${codePointLength($('essay').value).toLocaleString()} / 15,000 字符`;$('language-label').textContent=detectLanguage($('essay').value);}
 function activePolicy(){return $('policy').value==='auto'?samples[current].policy:$('policy').value;}
 function invalidate(){draftChanged=true;report=null;confirmed=false;$('report-state').textContent='等待重新评阅';$('report').replaceChildren(el('div','原文或规则已更改。请核对文字后重新评阅；原报告不会继续用于确认。','pending'));$('input-error').textContent='';updateCount();}
@@ -17,6 +19,7 @@ function makeReport(preview=false){
     confirmed=false;
     report={mode:matched?'synthetic-example':'manual-review',title:$('essay-title').value||'未命名作文',text,stats,policy:activePolicy(),rubric:matched?sample.rubric:'自定义内容 · 教师量规待确认',scores:matched&&sample.scores?[...sample.scores]:null,weights:[...sample.weights],feedback:matched?sample.feedback:[],summary:matched?sample.summary:'文本已准备好，等待教师评定。',approved:false,comment:'',knowledgeRelease:'demo-v0.1'};
     $('input-error').textContent='';$('report-state').textContent=preview?'案例预览':'待教师复核';renderReport();
+    if(!preview)setReviewPane('review',true);
     if(!preview)toast(matched?'已载入对应的合成案例报告。':'已完成本机文本检查。未调用模型，请由教师填写评分。');
   } catch(error){$('input-error').textContent=error.message;}
 }
@@ -31,7 +34,7 @@ function renderReport(){
     row.append(el('span',name),bar,el('b',report.scores?`${report.scores[i]}/${report.weights[i]}`:'待评'));root.append(row);
   });
   const tabs=el('div',undefined,'report-tabs'),body=el('div');
-  ['教学反馈','评分依据','复核记录'].forEach((name,i)=>{const b=el('button',name,`report-tab${i===0?' active':''}`);b.addEventListener('click',()=>{for(const child of tabs.children)child.classList.remove('active');b.classList.add('active');renderDetail(i,body);});tabs.append(b);});root.append(tabs,body);renderDetail(0,body);
+  ['教学反馈','评分依据','复核记录'].forEach((name,i)=>{const b=el('button',name,`report-tab${i===0?' active':''}`);b.setAttribute('aria-pressed',String(i===0));b.addEventListener('click',()=>{for(const child of tabs.children){child.classList.remove('active');child.setAttribute('aria-pressed','false');}b.classList.add('active');b.setAttribute('aria-pressed','true');renderDetail(i,body);});tabs.append(b);});root.append(tabs,body);renderDetail(0,body);
   const teacher=el('details',undefined,'teacher');teacher.append(el('summary','教师修订评分与评语'));
   dimensions.forEach((name,i)=>{const label=el('label',undefined,'adjust');label.append(el('span',`${name} / ${report.weights[i]}`));const input=document.createElement('input');input.id=`score-${i}`;input.type='number';input.min='0';input.max=String(report.weights[i]);input.step='1';if(report.scores)input.value=String(report.scores[i]);input.addEventListener('input',()=>{confirmed=false;report.approved=false;$('report-state').textContent='评分已修改 · 待确认';});label.append(input);teacher.append(label);});
   const commentLabel=el('label','教师评语（修改示例分数时请说明依据）');commentLabel.htmlFor='teacher-comment';const comment=document.createElement('textarea');comment.id='teacher-comment';comment.value=report.comment||'';comment.maxLength=2000;comment.placeholder='用一条具体建议帮助学生完成下一稿';comment.addEventListener('input',()=>{confirmed=false;report.approved=false;$('report-state').textContent='评语已修改 · 待确认';});teacher.append(commentLabel,comment);root.append(teacher);
@@ -50,6 +53,7 @@ function renderDetail(index,root){
         jump.addEventListener('click',()=>{
           const essay=$('essay');
           if(essay.value!==original){toast('原文已变动，请重新评阅后定位。');return;}
+          setReviewPane('paper');
           essay.focus();
           essay.setSelectionRange(start,start+f.quote.length);
         });
@@ -109,7 +113,7 @@ try{demoHistory=parseHistory(sessionStorage.getItem(HISTORY_KEY));}catch(error){
 function renderDemoHistory(){
  $('demo-history-list').replaceChildren();
  for(const item of demoHistory){const row=el('article',undefined,'history-row'),open=el('button','打开报告','button secondary'),download=el('button','导出 JSON','button secondary');row.append(el('strong',item.report.title),el('span',`${item.report.scores?item.report.scores.reduce((a,b)=>a+b,0)+' 分':'待评定'} · ${item.report.approved?'已确认演示':'待复核'} · ${new Date(item.savedAt).toLocaleString('zh-CN')}`));
- open.addEventListener('click',()=>{if(!window.confirm('载入这份已保存报告？当前未保存编辑将被替换。'))return;const match=Object.entries(samples).find(([,s])=>s.text===item.report.text);draftChanged=false;current=match[0];$('sample').value=current;$('essay-title').value=item.report.title;$('essay').value=item.report.text;$('policy').value=item.report.policy;$('text-confirmed').checked=true;clearImage();updateCount();report=structuredClone(item.report);confirmed=report.approved;renderReport();$('report-state').textContent='已载入历史 · '+(confirmed?'当时已确认':'待教师复核');$('report-heading').scrollIntoView({block:'start'});});
+ open.addEventListener('click',()=>{if(!window.confirm('载入这份已保存报告？当前未保存编辑将被替换。'))return;const match=Object.entries(samples).find(([,s])=>s.text===item.report.text);draftChanged=false;current=match[0];$('sample').value=current;$('essay-title').value=item.report.title;$('essay').value=item.report.text;$('policy').value=item.report.policy;$('text-confirmed').checked=true;clearImage();updateCount();report=structuredClone(item.report);confirmed=report.approved;renderReport();$('report-state').textContent='已载入历史 · '+(confirmed?'当时已确认':'待教师复核');setReviewPane('review',true);});
  download.addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(item,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='inkwise-saved-report.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});row.append(open,download);$('demo-history-list').append(row);}
  if(!demoHistory.length&&!historyInvalid)$('demo-history-state').textContent='尚未保存合成报告。';
  $('save-demo-report').disabled=historyInvalid;

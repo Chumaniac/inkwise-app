@@ -66,3 +66,7 @@ macOS：~/Library/Application Support/InkwiseK12/workspace；其他系统：~/.l
 **网页需要密钥吗？** 不需要。公开示例在浏览器内处理。本机评分的模型、工作区目录和访问方式见[配置说明](docs/local-model-setup.md)。
 
 [参与贡献](CONTRIBUTING.md)
+
+## 工作区与窄屏操作
+
+窄屏评阅分为原文与报告两个视图。引用定位会回到原文；评阅完成后进入报告。教师工作台的班级列表按需展开，选中任务后收起，退出会清除展开状态。
