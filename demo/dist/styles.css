@@ -3,7 +3,6 @@ button { cursor: pointer; }
 button:disabled { color: var(--text-secondary); background: var(--surface-muted); border-color: var(--border); }
 .sidebar { height: 100dvh; position: fixed; inset: 0 auto 0 0; border-inline-end: 1px solid var(--border); display: flex; flex-direction: column; }
 .brand { display: flex; gap: var(--space-3); align-items: center; color: var(--text-primary); text-decoration: none; font-size: 1.5rem; font-weight: 650; letter-spacing: -.025em; }
-.brandmark { border: 1px solid var(--border-strong); border-radius: var(--radius-md); width: 42px; height: 48px; display: grid; place-items: center; flex-shrink: 0; }
 .brand small { display: block; color: var(--text-secondary); font-size: .6875rem; letter-spacing: .14em; margin-top: var(--space-1); font-weight: 500; }
 .navlabel { font-size: .6875rem; font-weight: 550; color: var(--text-secondary); margin: 56px var(--space-3) var(--space-4); }
 .nav { display: flex; gap: var(--space-3); align-items: center; width: 100%; min-height: var(--control-height); text-align: start; border: 1px solid transparent; border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); color: var(--text-secondary); background: transparent; font-size: .875rem; font-weight: 500; transition: background-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease); }
@@ -172,7 +171,6 @@ footer small { font-size: .6875rem; margin-inline-start: auto; }
 }
 @media (max-width: 550px) {
   .sidebar { position: static; height: auto; width: 100%; padding: var(--space-3) var(--space-4); flex-direction: row; align-items: center; justify-content: space-between; border-inline-end: 0; border-bottom: 1px solid var(--border); }
-  .brandmark { width: 36px; height: 40px; font-size: 1.25rem; }
   .sidebar nav { display: flex; gap: var(--space-2); }
   .nav { min-width: var(--control-height); margin: 0; padding: var(--space-2); }
   .shell { margin-inline-start: 0; }

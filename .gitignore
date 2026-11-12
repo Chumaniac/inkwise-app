@@ -27,7 +27,6 @@ release/
 .runtime/
 *.app/
 *.sqlite3*
-*.db
 *.log
 .local/
 
