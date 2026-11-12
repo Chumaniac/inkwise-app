@@ -126,3 +126,7 @@ $('save-demo-report').addEventListener('click',()=>{try{
  }catch(error){$('demo-history-state').textContent=error.message;}});
 $('clear-demo-history').addEventListener('click',()=>{if(!window.confirm('清除本标签页保存的演示历史？'))return;try{sessionStorage.removeItem(HISTORY_KEY);demoHistory=[];historyInvalid=false;renderDemoHistory();}catch{$('demo-history-state').textContent='清除失败，请检查浏览器存储权限。';}});
 renderDemoHistory();
+
+$('guide-case').onclick=()=>{$('sample').focus();$('sample').scrollIntoView({block:'center'});};
+$('guide-paper').onclick=()=>{setReviewPane('paper');$('essay').focus();};
+$('guide-review').onclick=()=>setReviewPane('review',true);

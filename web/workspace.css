@@ -225,3 +225,5 @@ footer{margin:32px auto 24px;max-width:1450px;padding:0 24px}
 #workspace .eyebrow,#queue-filter-indicator{color:var(--text-secondary)}
 
 @media(max-width:850px){.job-stage-nav{top:72px}#source-heading,#report-heading,#revision-heading,#records-heading{scroll-margin-top:48px}}
+
+.workspace-purpose{max-width:64ch;margin:10px 0 0;color:var(--text-secondary);font-size:13px;line-height:1.8}.workspace-guide{padding:0 18px;margin:18px 0;border:1px solid var(--border);border-radius:7px;background:#fffefa}.workspace-guide>summary{cursor:pointer;padding:13px 0;font-size:13px;font-weight:550;color:#5c3744}.workspace-guide ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;margin:10px 0 20px;padding-left:20px}.workspace-guide li{font-size:12px;line-height:1.8;min-width:0}.workspace-guide p{color:var(--text-secondary);font-size:12px;margin:7px 0 10px}.workspace-guide button{font-size:12px;margin:5px 6px 0 0;min-height:40px}@media(max-width:850px){.workspace-guide ol{grid-template-columns:1fr;gap:14px}.workspace-guide button{min-height:44px}.workspace-purpose{font-size:12px}}
