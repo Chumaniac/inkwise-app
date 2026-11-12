@@ -12,6 +12,7 @@ from inkwise.core import DIMENSIONS
 from inkwise.database import Identity, create_session_factory, initialize_database
 from inkwise.rubrics import canonical, digest, safe_segment
 from inkwise.settings import Settings
+from inkwise.errors import DomainError
 from inkwise.setup import provision, write_private
 
 
@@ -79,6 +80,14 @@ def _main() -> None:
     upgrade = sub.add_parser('upgrade-check', help='Read-only local SQLite schema, backup, space and downgrade check')
     upgrade.add_argument('--backup-file', type=Path)
     upgrade.add_argument('--target-data-feature', action='append')
+    backup = sub.add_parser('workspace-backup', help='Snapshot a stopped local SQLite workspace and frozen local dependencies')
+    backup.add_argument('--output', type=Path, required=True)
+    backup.add_argument('--stopped', action='store_true')
+    check_backup = sub.add_parser('workspace-check', help='Read-only checksum and compatibility check of a workspace bundle')
+    check_backup.add_argument('--backup', type=Path, required=True)
+    restore = sub.add_parser('workspace-restore', help='Restore verified files into a new directory; never start services')
+    restore.add_argument('--backup', type=Path, required=True)
+    restore.add_argument('--output', type=Path, required=True)
     sub.add_parser("storage-status", help="Read bounded cache/original-image metadata and disk headroom")
     seed = sub.add_parser("seed-demo")
     seed.add_argument("--tenant", required=True)
@@ -188,6 +197,20 @@ def _main() -> None:
         from inkwise.reference import index_references
         result=asyncio.run(index_references(settings,args.tenant))
         print("Indexed public curriculum references:",result["indexedReferences"])
+    elif args.command in {'workspace-backup', 'workspace-check', 'workspace-restore'}:
+        from inkwise.workspace_backup import backup_workspace, check_workspace, restore_workspace
+        from inkwise.workspace_files import WorkspaceBackupError
+        try:
+            if args.command == 'workspace-backup':
+                result = backup_workspace(settings, args.output, stopped=args.stopped)
+            elif args.command == 'workspace-check':
+                result = check_workspace(args.backup)
+            else:
+                result = restore_workspace(args.backup, args.output)
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            reason = str(error) if isinstance(error, WorkspaceBackupError) else 'IO_OR_FORMAT_UNAVAILABLE'
+            raise DomainError('WORKSPACE_BACKUP_' + reason) from None
+        print(json.dumps(result))
     elif args.command == "storage-status":
         from inkwise.cache_storage import storage_status
         print(json.dumps(storage_status(settings)))
