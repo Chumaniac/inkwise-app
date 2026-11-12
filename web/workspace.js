@@ -1080,3 +1080,8 @@ $('reassessment-submit').addEventListener('click',e=>mutateWritingRevision(e.tar
 $('reassessment-open').addEventListener('click',e=>busy(e.target,async()=>{const id=revisionAssessment?.job?.id;if(id)await selectJob(id);}));
 
 $('readiness-next').addEventListener('click',event=>{event.preventDefault();const next=reportReadiness&&readinessNext[reportReadiness.nextAction];if(next)focusJobTarget(next[0]);});
+
+function guideQueue(){showQueue(true);$('job-search').focus();$('job-search').scrollIntoView({block:'center'});}
+$('guide-queue').onclick=guideQueue;
+$('guide-create').onclick=()=>$('new-job').click();
+for(const [id,stage] of [['guide-source','source'],['guide-report','report']])$(id).onclick=()=>{if(job)setJobStage(stage);else{notify('请先从班级列表打开作业，或新建一份作文任务。');guideQueue();}};

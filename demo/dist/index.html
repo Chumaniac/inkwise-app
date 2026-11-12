@@ -24,8 +24,9 @@
     <header class="topbar"><span>语言教学 <span class="slash">/</span> <strong id="breadcrumb">作文批改</strong></span><span class="edition">公开演示</span></header>
     <main id="main" tabindex="-1">
       <section id="work-view" class="view">
-        <div class="pagehead"><div><p class="eyebrow">作文批改演示</p><h1>作文评阅</h1><p>从原文依据到教师意见，保留每一步判断。</p></div><button id="reset" class="button secondary">重置演示</button></div>
+        <div class="pagehead"><div><p class="eyebrow">作文批改演示</p><h1>作文评阅</h1><p>给语文和英语教师：把作文原句、评分依据与教师意见放在一起核对，形成可回看的反馈报告。</p></div><button id="reset" class="button secondary">重置演示</button></div>
         <div class="notice"><strong>合成案例演示</strong><span>预置分数用于体验流程，未接入真实 OCR 或大模型。输入内容只在当前浏览器内处理，不上传。合成报告可主动保存到本标签页历史，关闭标签页或清除历史后移除。</span></div>
+        <details class="usage-guide"><summary>第一次体验：从一篇合成作文到教师复核</summary><ol><li><strong>选一份案例</strong><p>语文、英语、中英混写或方言案例各有对应规则。无需账号，先观察系统怎样区分语言与量规。</p><button id="guide-case" type="button" class="button secondary">先选案例与规则</button></li><li><strong>核对原文</strong><p>读一遍作文，必要时修改文字；核对后勾选原文确认，再点“开始评阅体验”。改写后旧报告会失效。</p><button id="guide-paper" type="button" class="button secondary">去核对作文原文</button></li><li><strong>逐条复核再导出</strong><p>从评语定位原句，查看评分依据。需要改分时写明教师理由，再确认并导出；这里不签发学校成绩。</p><button id="guide-review" type="button" class="button secondary">打开报告与教师复核</button></li></ol></details>
         <div class="toolbar">
           <div><label for="sample">体验案例</label><select id="sample" name="sample"><option value="zh">语文 · 一次小小的改变</option><option value="mixed">中英混写 · A greener school</option><option value="en">英语 · My weekend</option><option value="dialect">方言表达 · 外婆的厨房</option></select></div>
           <div><label for="policy">语言规则</label><select id="policy" name="policy"><option value="auto">随案例路由</option><option value="zh">中文书面语</option><option value="mixed">允许中英切换</option><option value="en">英语短文</option><option value="dialect">保留方言表达</option></select></div>
