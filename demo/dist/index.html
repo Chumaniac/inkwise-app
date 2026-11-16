@@ -59,6 +59,7 @@
       </section>
       <section id="architecture-view" class="view" hidden>
         <div class="pagehead"><div><p class="eyebrow">处理流程</p><h1>批改流程与接入要求。</h1><p>查看任务管理、原文识别、评分和复核的职责。</p></div><a class="button secondary" href="technical-design.html" target="_blank" rel="noopener">阅读完整技术方案</a></div>
+        <section class="panel" aria-labelledby="demo-call-title"><h2 id="demo-call-title">请求超时后，怎样继续？</h2><p>先核对原请求，再决定是否重试。这个合成示例只更改当前页面状态，不连接供应商。</p><ol><li>读取原回执，核对任务、输入摘要与尝试次数。</li><li>向供应商核查原请求；已有成功输出时应恢复原结果。</li><li>没有可恢复输出时，明确授权后续重试，任务仍保持停止。</li></ol><p id="demo-call-state" role="status" aria-live="polite">合成回执：结果未知 · 原尝试2次 · 任务已停止。</p><div class="actions"><button class="button secondary" type="button" id="demo-call-read">读取合成回执</button><button class="button secondary" type="button" id="demo-call-reset">重置这个示例</button></div><label><input type="checkbox" id="demo-call-confirm" disabled>演示确认：已核查，无可恢复的成功输出</label><button class="button" type="button" id="demo-call-authorize" disabled>演示授权后续重试</button><p class="hint">正式工作台仅管理员可操作，授权绑定原作业版本；次数与费用上限不重置。</p></section>
         <div class="agent-grid">
           <article class="panel agent"><span class="agent-number">01</span><h2>任务管理</h2><h3>统筹与裁决</h3><p>管理任务状态、固定知识版本，识别争议并转交教师。不会自行修改教学标准。</p></article>
           <article class="panel agent"><span class="agent-number">02</span><h2>原文识别</h2><h3>忠实还原原文</h3><p>识别版面与笔迹，展示低置信候选；识别纠错与作文润色分别记录。</p></article>

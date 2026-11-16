@@ -130,3 +130,17 @@ renderDemoHistory();
 $('guide-case').onclick=()=>{$('sample').focus();$('sample').scrollIntoView({block:'center'});};
 $('guide-paper').onclick=()=>{setReviewPane('paper');$('essay').focus();};
 $('guide-review').onclick=()=>setReviewPane('review',true);
+
+// A self-contained explanation, never a provider or school-workspace request.
+let demoCallState='unknown';
+function renderDemoCall(){
+ $('demo-call-confirm').disabled=demoCallState!=='checked';
+ $('demo-call-authorize').disabled=demoCallState!=='checked'||!$('demo-call-confirm').checked;
+ $('demo-call-read').disabled=demoCallState==='authorized';
+ $('demo-call-state').textContent=demoCallState==='authorized'?'合成回执：已授权后续重试 · 原尝试仍为2次 · 任务仍停止 · 模型请求0次。':demoCallState==='checked'?'已读取合成回执。下一步先向供应商核查；本例没有成功输出。原尝试2次，任务停止。':'合成回执：结果未知 · 原尝试2次 · 任务已停止。';
+}
+$('demo-call-read').addEventListener('click',()=>{demoCallState='checked';$('demo-call-confirm').checked=false;renderDemoCall();});
+$('demo-call-confirm').addEventListener('change',renderDemoCall);
+$('demo-call-authorize').addEventListener('click',()=>{if(demoCallState!=='checked'||!$('demo-call-confirm').checked)return;demoCallState='authorized';$('demo-call-confirm').checked=false;renderDemoCall();});
+$('demo-call-reset').addEventListener('click',()=>{demoCallState='unknown';$('demo-call-confirm').checked=false;renderDemoCall();});
+renderDemoCall();
