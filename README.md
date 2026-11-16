@@ -1,4 +1,4 @@
-<img src="demo/dist/assets/mark.svg" width="56" height="56" alt="" />
+<img src="web/assets/mark.svg" width="56" height="56" alt="" />
 
 # 墨评 Inkwise
 
