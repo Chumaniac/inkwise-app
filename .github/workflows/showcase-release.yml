@@ -72,4 +72,4 @@ jobs:
         run: |
           set -euo pipefail
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then echo 'Existing releases are immutable' >&2; exit 1; fi
-          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --title "墨评 · 公开流程示例 $GITHUB_REF_NAME" --notes '作文复核与原回执核查的合成流程；运行 demo/dist/index.html 所在静态目录即可体验。仅有当前页面状态，不连接学校或模型供应商。附源码身份、SHA-256和构建来源证明。' release/*
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --latest=false --title "墨评 · 公开流程示例 $GITHUB_REF_NAME" --notes '作文复核与原回执核查的合成流程；运行 demo/dist/index.html 所在静态目录即可体验。仅有当前页面状态，不连接学校或模型供应商。附源码身份、SHA-256和构建来源证明。' release/*
