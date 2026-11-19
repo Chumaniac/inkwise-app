@@ -6,7 +6,7 @@
 
 逐段核对作文原文、评分依据与教师终评。
 
-**[打开作文评阅样例 →](https://chumaniac.github.io/inkwise-app/)** · [当前浏览器包](https://github.com/Chumaniac/inkwise-app/releases/tag/showcase-2026.11.16) · [桌面练习包（2026.11.11）](https://github.com/Chumaniac/inkwise-app/releases/tag/user-2026.11.11-zh)
+**[打开作文评阅样例 →](https://chumaniac.github.io/inkwise-app/)** · [当前浏览器包](https://github.com/Chumaniac/inkwise-app/releases/tag/showcase-2026.11.16) · [桌面练习包（2026.11.19）](https://github.com/Chumaniac/inkwise-app/releases/tag/user-2026.11.19)
 
 浏览器包提供当前合成作文、教师复核与回执核对样例；桌面练习包保留其发行时的本机功能，安装与模型要求见对应发行说明。
 
@@ -85,3 +85,5 @@ macOS：~/Library/Application Support/InkwiseK12/workspace；其他系统：~/.l
 窄屏评阅分为原文与报告两个视图。引用定位会回到原文；评阅完成后进入报告。教师工作台的班级列表按需展开，选中任务后收起，退出会清除展开状态。
 
 本机管理员可用[停服工作区备份、校验与新目录恢复](docs/workspace-recovery.md)保留数据库、原稿及规则。命令仅在本机运行，恢复默认不启动模型或后台任务；公开网页不接收真实备份。
+
+历史 [2026.11.11 中文桌面包](https://github.com/Chumaniac/inkwise-app/releases/tag/user-2026.11.11-zh) 保留原附件与下载地址。
