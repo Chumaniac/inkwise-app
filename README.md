@@ -6,7 +6,9 @@
 
 逐段核对作文原文、评分依据与教师终评。
 
-**[打开作文评阅样例 →](https://chumaniac.github.io/inkwise-app/)** · [桌面下载](https://github.com/Chumaniac/inkwise-app/releases)
+**[打开作文评阅样例 →](https://chumaniac.github.io/inkwise-app/)** · [当前浏览器包](https://github.com/Chumaniac/inkwise-app/releases/tag/showcase-2026.11.16) · [桌面练习包（2026.11.11）](https://github.com/Chumaniac/inkwise-app/releases/tag/user-2026.11.11-zh)
+
+浏览器包提供当前合成作文、教师复核与回执核对样例；桌面练习包保留其发行时的本机功能，安装与模型要求见对应发行说明。
 
 进入后，选择一篇合成作文，打开「报告与复核」，点击「定位原文」核对评语依据，再点「保存合成报告」留在本标签页。公开页面不接入真实 OCR 或评分模型。
 
