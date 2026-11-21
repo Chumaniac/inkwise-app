@@ -122,7 +122,7 @@ $('save-demo-report').addEventListener('click',()=>{try{
  if(!report||report.mode!=='synthetic-example')throw Error('历史仅保存合成案例。自定义内容请直接导出。');
  const copy=structuredClone(report);if(!confirmed){copy.comment=$('teacher-comment')?.value||'';const values=dimensions.map((_,i)=>$(`score-${i}`).value);if(!values.every((v,i)=>v!==''&&Number.isInteger(Number(v))&&Number(v)>=0&&Number(v)<=copy.weights[i]))throw Error('请为五个维度填写范围内的整数分数，再保存报告。');copy.scores=values.map(Number);}
  const latestHistory=parseHistory(sessionStorage.getItem(HISTORY_KEY));
- const next=[{id:crypto.randomUUID(),savedAt:new Date().toISOString(),report:copy},...latestHistory].slice(0,10),raw=JSON.stringify({version:1,items:next});parseHistory(raw);sessionStorage.setItem(HISTORY_KEY,raw);demoHistory=next;draftChanged=false;renderDemoHistory();$('demo-history-state').textContent='已保存合成报告，关闭标签页前可导出。';
+ const next=[{id:newId(),savedAt:new Date().toISOString(),report:copy},...latestHistory].slice(0,10),raw=JSON.stringify({version:1,items:next});parseHistory(raw);sessionStorage.setItem(HISTORY_KEY,raw);demoHistory=next;draftChanged=false;renderDemoHistory();$('demo-history-state').textContent='已保存合成报告，关闭标签页前可导出。';
  }catch(error){$('demo-history-state').textContent=error.message;}});
 $('clear-demo-history').addEventListener('click',()=>{if(!window.confirm('清除本标签页保存的演示历史？'))return;try{sessionStorage.removeItem(HISTORY_KEY);demoHistory=[];historyInvalid=false;renderDemoHistory();}catch{$('demo-history-state').textContent='清除失败，请检查浏览器存储权限。';}});
 renderDemoHistory();
@@ -144,3 +144,13 @@ $('demo-call-confirm').addEventListener('change',renderDemoCall);
 $('demo-call-authorize').addEventListener('click',()=>{if(demoCallState!=='checked'||!$('demo-call-confirm').checked)return;demoCallState='authorized';$('demo-call-confirm').checked=false;renderDemoCall();});
 $('demo-call-reset').addEventListener('click',()=>{demoCallState='unknown';$('demo-call-confirm').checked=false;renderDemoCall();});
 renderDemoCall();
+
+// randomUUID needs a secure context; a static server on a LAN address still has getRandomValues.
+function newId(){if(typeof crypto.randomUUID==='function')return crypto.randomUUID();const b=crypto.getRandomValues(new Uint8Array(16));b[6]=(b[6]&0x0f)|0x40;b[8]=(b[8]&0x3f)|0x80;const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;}
+// Appearance: follows the system until chosen here. Only this choice is kept in local storage.
+const THEME_KEY='inkwise.demo.theme';
+function storedTheme(){try{const value=localStorage.getItem(THEME_KEY);return value==='light'||value==='dark'?value:null;}catch{return null;}}
+function effectiveTheme(){return storedTheme()??(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
+function paintTheme(theme,explicit){if(explicit)document.documentElement.dataset.theme=theme;$('theme-toggle').setAttribute('aria-label',theme==='dark'?'切换到浅色外观':'切换到深色外观');}
+$('theme-toggle').addEventListener('click',()=>{const next=effectiveTheme()==='dark'?'light':'dark';try{localStorage.setItem(THEME_KEY,next);}catch{}paintTheme(next,true);});
+paintTheme(effectiveTheme(),storedTheme()!==null);
