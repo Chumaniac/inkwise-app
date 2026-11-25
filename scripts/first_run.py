@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import secrets
 import threading
+from urllib.parse import urlparse
 
 
 def serve_setup(port, check, *, model_name="inkwise-qwen-local", model_base_url="http://127.0.0.1:11434/v1"):
@@ -21,6 +22,11 @@ rm "$inkwise_model_file"</pre><p>已有其他服务配置时，按使用说明�
     local = model_base_url.rstrip('/') in {'http://127.0.0.1:11434/v1', 'http://localhost:11434/v1'}
     if local and model_name.removesuffix(':latest') == 'inkwise-qwen-local':
         template = template.replace('deepseek-r1:7b', 'qwen2.5:7b').replace('inkwise-deepseek-local', 'inkwise-qwen-local').replace('65536', '32768')
+    elif urlparse(model_base_url).hostname == 'api.deepseek.com':
+        start = template.index('<ol>')
+        end = template.index('</pre>', start) + len('</pre>')
+        template = template[:start] + '''<p>当前准备使用 DeepSeek API。请在私人工作区的 .env 中填写 INKWISE_CLOUD_MODEL_API_KEY，并由管理员设置费用上限与 INKWISE_CLOUD_ENABLED。密钥只保存在本机，不要贴到聊天或提交仓库。</p><p>保存后重新打开墨评。新作业还需要选择云端处理并明确同意发送原文；未配置或未同意时不会评分。原作业与报告继续保留。本机向量服务已停用时，使用已校验的本地规则并显示检索提示。</p>''' + template[end:]
+        template = template.replace('本机评分服务尚未就绪', '云端评分尚未启用或配置未完成')
     elif not (local and model_name.removesuffix(':latest') == 'inkwise-deepseek-local'):
         start = template.index('<ol>')
         end = template.index('</pre>', start) + len('</pre>')

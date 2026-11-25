@@ -220,7 +220,8 @@ def main() -> int:
             from inkwise.cli import write_private
             write_private(running, json.dumps({'pid': os.getpid(), 'started': process_stamp(os.getpid()), 'port': args.port}))
             prepared = serve_setup(args.port, lambda: doctor(settings, connect=True),
-                                   model_name=settings.model_name, model_base_url=settings.model_base_url)
+                                   model_name=settings.model_name or settings.cloud_model_name,
+                                   model_base_url=settings.model_base_url or settings.cloud_model_base_url)
             running.unlink(missing_ok=True)
             if prepared:
                 report = doctor(settings, connect=True)

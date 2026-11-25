@@ -4,6 +4,7 @@ import asyncio
 import json
 from dataclasses import dataclass
 from typing import Literal
+from urllib.parse import urlparse
 
 import httpx
 from pydantic import BaseModel, Field, ValidationError, create_model
@@ -66,6 +67,9 @@ class ModelGateway:
                     "不代写全文，不评价人格。必须引用原文和给定规则。字符偏移按 Unicode code point。"
                     +task+" JSON schema: "+json.dumps(schema.model_json_schema(),ensure_ascii=False))},
                 {"role":"user","content":json.dumps(data,ensure_ascii=False)}]}
+        # DeepSeek defaults to thinking; scoring needs the bounded JSON answer.
+        if urlparse(self.settings.model_base_url).hostname == 'api.deepseek.com':
+            payload['thinking'] = {'type': 'disabled'}
         from inkwise.routing import token_count
         if token_count(json.dumps(payload,ensure_ascii=False),self.settings)+self.settings.model_max_output_tokens>self.settings.model_context_tokens:
             raise DomainError("MODEL_CONTEXT_BUDGET_EXCEEDED")
