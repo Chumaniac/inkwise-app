@@ -5,9 +5,11 @@ import socket
 import threading
 import urllib.error
 import urllib.request
+import pytest
 
 
-def test_setup_requires_local_host_origin_and_token_before_transition():
+@pytest.mark.parametrize('cloud', [False, True])
+def test_setup_requires_local_host_origin_and_token_before_transition(cloud):
     spec = importlib.util.spec_from_file_location('first_run', Path(__file__).parents[1] / 'scripts/first_run.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -18,7 +20,8 @@ def test_setup_requires_local_host_origin_and_token_before_transition():
     def check():
         calls.append(True)
         return {'ready': True, 'checks': []}
-    worker = threading.Thread(target=module.serve_setup, args=(port, check), daemon=True)
+    options = {'model_name': 'deepseek-flash', 'model_base_url': 'https://api.deepseek.com'} if cloud else {}
+    worker = threading.Thread(target=module.serve_setup, args=(port, check), kwargs=options, daemon=True)
     worker.start()
     import time
     origin = f'http://127.0.0.1:{port}'
@@ -32,6 +35,10 @@ def test_setup_requires_local_host_origin_and_token_before_transition():
     else:
         raise AssertionError('setup server did not start')
     token = re.search('nonce="([A-Za-z0-9_-]+)"', page).group(1)
+    if cloud:
+        assert 'DeepSeek API' in page and 'CLOUD_MODEL_API_KEY' in page
+        assert 'ollama pull' not in page
+        assert not calls
     for headers in [{'Host': 'untrusted.example'}, {'Origin': 'https://untrusted.example', 'X-Setup-Token': token}, {'Origin': origin, 'X-Setup-Token': 'wrong'}]:
         request = urllib.request.Request(origin + '/setup/check', data=b'', headers=headers, method='POST')
         try:

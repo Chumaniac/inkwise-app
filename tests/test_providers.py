@@ -13,6 +13,20 @@ from inkwise.rubrics import RubricRepository
 from inkwise.settings import Settings
 
 
+@pytest.mark.parametrize('endpoint,expected', [
+    ('https://api.deepseek.com', {'type': 'disabled'}),
+    ('https://api.deepseek.com/v1', {'type': 'disabled'}),
+    ('http://127.0.0.1:11434/v1', None),
+    ('https://api.deepseek.com.example.invalid', None),
+])
+def test_deepseek_uses_bounded_non_thinking_json_requests(endpoint, expected):
+    gateway = ModelGateway(Settings(model_name='deepseek-flash', model_base_url=endpoint), client=object())
+    payload = gateway.request_payload(DimensionScore, 'Synthetic task', {'text': 'Synthetic essay'})
+    assert payload.get('thinking') == expected
+    assert payload['response_format'] == {'type': 'json_object'}
+    assert payload['max_tokens'] == 1800
+
+
 @pytest.fixture
 def rubric(tmp_path):
     settings = Settings(rubric_dir=tmp_path)
