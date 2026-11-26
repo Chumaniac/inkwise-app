@@ -99,3 +99,47 @@ async def test_usage_redacted_success_reused_and_chunk_cache_separated(setup):
     with sessions() as db:
         usage=db.scalars(select(JobEvent).where(JobEvent.event=='model.usage')).all()
         assert len(usage)==2 and all(row.detail=={'prompt_tokens':10,'completion_tokens':20} for row in usage)
+
+
+@pytest.mark.asyncio
+async def test_concurrent_route_selection_reuses_one_frozen_probe(setup):
+    settings, sessions, _, _ = setup
+    settings.model_base_url = 'http://127.0.0.1:12345/v1'
+    job = claim_job(sessions, settings)
+    calls = 0
+
+    async def probe(route, settings):
+        nonlocal calls
+        calls += 1
+        await asyncio.sleep(.025)
+        return {'revision': 'synthetic-v1', 'contextTokens': 65536, 'revisionSource': 'configured'}
+
+    tasks = [select_route(settings, sessions, job, probe) for _ in range(32)]
+    results = await asyncio.wait_for(asyncio.gather(*tasks), timeout=3)
+    assert all(plan == results[0][1] for _, plan in results)
+    assert calls == 1
+
+
+@pytest.mark.asyncio
+async def test_cancelled_route_owner_releases_waiter_without_partial_plan(setup):
+    settings, sessions, _, _ = setup
+    settings.model_base_url = 'http://127.0.0.1:12345/v1'
+    job = claim_job(sessions, settings)
+    started = asyncio.Event()
+
+    async def cancelled_probe(route, settings):
+        started.set()
+        await asyncio.Event().wait()
+
+    async def healthy_probe(route, settings):
+        return {'revision': 'replacement', 'contextTokens': 65536, 'revisionSource': 'configured'}
+
+    owner = asyncio.create_task(select_route(settings, sessions, job, cancelled_probe))
+    await asyncio.wait_for(started.wait(), 2)
+    waiter = asyncio.create_task(select_route(settings, sessions, job, healthy_probe))
+    owner.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await owner
+    _, plan = await asyncio.wait_for(waiter, 2)
+    assert plan['route']['revision'] == 'replacement'
+    assert len(list((settings.data_dir / 'routing' / job.id).glob('*.json'))) == 1

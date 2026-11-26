@@ -3,6 +3,7 @@ import asyncio
 import hashlib
 import json
 import math
+import os
 import re
 from contextlib import asynccontextmanager
 from functools import lru_cache
@@ -133,15 +134,44 @@ async def select_route(settings,sessions,job,probe=None,require_existing=False):
     if not options:raise DomainError('MODEL_NOT_CONFIGURED',503)
     scope={'tenant':job.tenant_id,'jobId':job.id,'textHash':job.text_hash,'rubricHash':digest(canonical(job.rubric))}
     path=settings.data_dir/'routing'/safe_segment(job.id)/(digest(canonical(scope))+'.json')
-    if path.exists():
-        plan=read_cache_json(path)
-        route=next((route for route in options if route['id']==plan['route']['id']),None)
-        if not route or plan['scope']!=scope or configuration_hash(route,settings)!=plan['configurationHash']:
+    def read_frozen():
+        plan = read_cache_json(path)
+        route = next((r for r in options if r['id'] == plan['route']['id']), None)
+        if not route or plan['scope'] != scope or configuration_hash(route, settings) != plan['configurationHash']:
             raise DomainError('MODEL_ROUTE_CONFIGURATION_CHANGED')
-        eligible(route,settings,job)
-        return bind_settings(settings,route,plan),plan
-    if require_existing:raise DomainError('MODEL_ROUTE_PLAN_REQUIRED')
+        eligible(route, settings, job)
+        return bind_settings(settings, route, plan), plan
+
+    if path.exists():
+        return read_frozen()
+    if require_existing:
+        raise DomainError('MODEL_ROUTE_PLAN_REQUIRED')
     ensure_cache_capacity(path.parent, settings, 1024 * 1024)
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    # The per-job directory is stable across atomic plan replacements. A nonblocking
+    # lock serializes first publication across local workers without blocking asyncio.
+    import fcntl
+    fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        deadline = asyncio.get_running_loop().time() + settings.job_timeout_seconds
+        while True:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if path.exists():
+                    return read_frozen()
+                if asyncio.get_running_loop().time() >= deadline:
+                    raise DomainError('MODEL_CAPACITY_BUSY')
+                await asyncio.sleep(.025)
+        if path.exists():
+            return read_frozen()
+        return await _create_route(settings, sessions, job, options, scope, path, probe)
+    finally:
+        os.close(fd)
+
+
+async def _create_route(settings, sessions, job, options, scope, path, probe):
     with sessions() as db:
         prior=db.scalar(select(func.coalesce(func.sum(CallReceipt.attempt),0)).where(CallReceipt.job_id==job.id))
     if prior:raise DomainError('LEGACY_ROUTE_RECONCILIATION_REQUIRED')
