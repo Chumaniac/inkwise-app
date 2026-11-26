@@ -390,5 +390,6 @@ def test_readiness_is_public_and_runtime_configuration_is_scoped(client):
     assert client.get("/api/v1/runtime-status", headers={"Authorization": "Bearer invalid"}).status_code == 401
     details = client.get("/api/v1/runtime-status", headers=auth())
     assert details.status_code == 200
-    assert set(details.json()) == {"modelConfigured", "ocrConfigured"}
+    assert set(details.json()) == {"modelConfigured", "ocrConfigured", "cloudEnabled"}
+    assert details.json()["cloudEnabled"] is False
     assert all(isinstance(value, bool) for value in details.json().values())

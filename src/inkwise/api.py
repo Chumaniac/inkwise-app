@@ -172,7 +172,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def runtime_status(user: User):
         from inkwise.settings import model_configured
         from inkwise.ocr import ocr_configured
-        return {"modelConfigured": model_configured(settings), "ocrConfigured": ocr_configured(settings)}
+        return {"modelConfigured": model_configured(settings), "ocrConfigured": ocr_configured(settings),
+                "cloudEnabled": settings.cloud_enabled}
 
     @app.get("/api/v1/me")
     def me(user: User):

@@ -25,7 +25,7 @@ INKWISE_EMBEDDING_REVISION=""
 INKWISE_LEXICON_MODEL_REVISION=""
 ```
 
-管理员之后填写密钥、核对当前价格，并设置明确的单作业费用上限，才将 `CLOUD_ENABLED` 改为 `true`。`MAX_CLOUD_COST_MICROUSD` 的单位为百万分之一美元，1000000 表示 1 美元。程序按最大上下文、输出和调用次数保守估算费用，可能高于实际账单；不能为通过检查直接放大额度。前端每份新作业还必须选择云端路由、同意发送确认后的原文并给出预算。退出后重开墨评使配置生效。
+管理员之后填写密钥、核对当前价格，并设置明确的单作业费用上限，才将 `CLOUD_ENABLED` 改为 `true`。`MAX_CLOUD_COST_MICROUSD` 的单位为百万分之一美元，1000000 表示 1 美元。程序按最大上下文、输出和调用次数保守估算费用，可能高于实际账单；不能为通过检查直接放大额度。前端每份新作业还必须选择云端路由、同意发送确认后的原文并给出预算。在 DeepSeek 准备页点击“重新检查并打开工作区”可读取新保存的密钥、云端开关及预算。修改工作区位置或服务地址时需重开应用。
 
 上述价格使用 2026-11-25 查到的 Flash 高峰未命中缓存价格作为保守上界；启用前重新核对 [官方模型与价格](https://api-docs.deepseek.com/quick_start/pricing/)。模型修订为运营方记录的版本名，不能保证远端别名的权重永久不变。DeepSeek 请求明确关闭 thinking，输出仍经过既有 JSON、原文引用及权限检查。参见 [官方接口](https://api-docs.deepseek.com/api/create-chat-completion/)。
 

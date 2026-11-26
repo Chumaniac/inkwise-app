@@ -53,3 +53,28 @@ def test_setup_requires_local_host_origin_and_token_before_transition(cloud):
     worker.join(3)
     assert not worker.is_alive()
     assert len(calls) == 1
+
+
+def test_deepseek_recheck_reads_saved_settings_and_pins_the_destination(tmp_path):
+    from inkwise.settings import Settings
+    from scripts.first_run import recheck_deepseek
+
+    config = tmp_path / '.env'
+    base = 'INKWISE_CLOUD_MODEL_BASE_URL=https://api.deepseek.com\nINKWISE_CLOUD_MODEL_NAME=deepseek-flash\n'
+    config.write_text(base)
+    original = Settings(_env_file=config)
+    probes = []
+    def catalog(settings, *, connect):
+        probes.append((settings.cloud_model_name, connect))
+        return {'ready': True, 'checks': []}
+
+    assert not recheck_deepseek(config, original, catalog)['ready']
+    assert not probes
+    ready = base + ('INKWISE_CLOUD_ENABLED=true\nINKWISE_CLOUD_MODEL_API_KEY=synthetic-placeholder\n'
+                    'INKWISE_MAX_CLOUD_COST_MICROUSD=1000000\nINKWISE_CLOUD_MODEL_REVISION=test\n'
+                    'INKWISE_CLOUD_INPUT_PRICE_MICROUSD_PER_MILLION=300000\nINKWISE_CLOUD_OUTPUT_PRICE_MICROUSD_PER_MILLION=1200000\n')
+    config.write_text(ready)
+    assert recheck_deepseek(config, original, catalog)['ready']
+    config.write_text(ready.replace('api.deepseek.com', 'unreviewed.invalid'))
+    assert not recheck_deepseek(config, original, catalog)['ready']
+    assert probes == [('deepseek-flash', True)]

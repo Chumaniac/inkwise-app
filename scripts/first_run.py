@@ -6,6 +6,35 @@ import threading
 from urllib.parse import urlparse
 
 
+def recheck_deepseek(env_file, initial, doctor):
+    """Refresh only operator-edited cloud settings on the already selected endpoint."""
+    from inkwise.settings import Settings
+
+    def missing(*names):
+        return {"ready": False, "checks": [{"name": name, "status": "fail"} for name in names]}
+
+    try:
+        current = Settings(_env_file=env_file)
+    except (OSError, ValueError):
+        return missing("配置文件格式")
+    editable = {"cloud_enabled", "cloud_model_api_key", "cloud_model_name", "cloud_model_revision",
+                "cloud_input_price_microusd_per_million", "cloud_output_price_microusd_per_million",
+                "cloud_context_tokens", "max_cloud_cost_microusd"}
+    if current.model_dump(exclude=editable) != initial.model_dump(exclude=editable):
+        return missing("其他设置已变更，请重新打开墨评")
+    needed = []
+    for value, label in (
+        (current.cloud_enabled, "启用云端"),
+        (current.cloud_model_api_key.get_secret_value().strip(), "API 密钥"),
+        (current.cloud_model_name and current.cloud_model_revision, "模型名称与修订"),
+        (current.max_cloud_cost_microusd > 0, "单作业费用上限"),
+        (current.cloud_input_price_microusd_per_million and current.cloud_output_price_microusd_per_million, "模型价格"),
+    ):
+        if not value:
+            needed.append(label)
+    return missing(*needed) if needed else doctor(current, connect=True)
+
+
 def serve_setup(port, check, *, model_name="inkwise-qwen-local", model_base_url="http://127.0.0.1:11434/v1"):
     token = secrets.token_urlsafe(32)
     origin = f'http://127.0.0.1:{port}'
@@ -25,7 +54,7 @@ rm "$inkwise_model_file"</pre><p>已有其他服务配置时，按使用说明�
     elif urlparse(model_base_url).hostname == 'api.deepseek.com':
         start = template.index('<ol>')
         end = template.index('</pre>', start) + len('</pre>')
-        template = template[:start] + '''<p>当前准备使用 DeepSeek API。请在私人工作区的 .env 中填写 INKWISE_CLOUD_MODEL_API_KEY，并由管理员设置费用上限与 INKWISE_CLOUD_ENABLED。密钥只保存在本机，不要贴到聊天或提交仓库。</p><p>保存后重新打开墨评。新作业还需要选择云端处理并明确同意发送原文；未配置或未同意时不会评分。原作业与报告继续保留。本机向量服务已停用时，使用已校验的本地规则并显示检索提示。</p>''' + template[end:]
+        template = template[:start] + '''<p>当前准备使用 DeepSeek API。请在私人工作区的 .env 中填写 INKWISE_CLOUD_MODEL_API_KEY，并由管理员设置费用上限与 INKWISE_CLOUD_ENABLED。密钥只保存在本机，不要贴到聊天或提交仓库。</p><p>保存后点击“重新检查并打开工作区”。新作业还需要选择云端处理并明确同意发送原文；未配置或未同意时不会评分。原作业与报告继续保留。本机向量服务已停用时，使用已校验的本地规则并显示检索提示。</p>''' + template[end:]
         template = template.replace('本机评分服务尚未就绪', '云端评分尚未启用或配置未完成')
     elif not (local and model_name.removesuffix(':latest') == 'inkwise-deepseek-local'):
         start = template.index('<ol>')

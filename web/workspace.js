@@ -202,7 +202,10 @@ $('login-form').addEventListener('submit',e=>{e.preventDefault();accessFileRead+
     for(const r of rubrics){const option=node('option',r.title);option.value=r.id;choice.append(option);}
     const grade=Number($('grade').value),initial=rubrics.find(r=>r.gradeMin<=grade&&grade<=r.gradeMax)||rubrics[0];
     if(initial){choice.value=initial.id;alignGrade();}
-    $('service-status').textContent=`评分模型：${status.modelConfigured?'已配置，实际结果以处理报告为准':'待配置'} · OCR：${status.ocrConfigured?'已配置':'可手工核对原文'}。所有评分仍需教师确认。`;
+    $('service-status').textContent=status.modelConfigured?'评分模型已配置':'评分模型待配置';
+    $('cloud-policy').textContent=status.cloudEnabled === true ? '云端路由已启用。每份作业仍需单独同意发送并设置费用上限。' : status.cloudEnabled === false ? '云端路由已关闭。作业原文不会交给云端评分。' : '云端路由状态待核对。';
+    $('ocr-policy').textContent=status.ocrConfigured?'原稿识别已配置，请核对识别结果。':'原稿识别待配置，可以手工核对原文。';
+    $('runtime-details').open=false;
     $('identity').textContent=`${me.tenantId} · ${me.role==='teacher'?'任课教师':me.role==='reviewer'?'教研审核':'学校管理员'}`;
     $('token').value='';$('message').textContent='';$('login-panel').hidden=true;$('workspace').hidden=false;$('logout').hidden=false;
     if(!rubrics.length)notify('当前学校没有已发布量规，管理员需先配置量规。');

@@ -198,7 +198,14 @@ def main() -> int:
         raise KeyboardInterrupt
     previous_signal = signal.signal(signal.SIGTERM, interrupt)
     try:
-        report = doctor(settings, connect=True)
+        def check_model():
+            if (not settings.model_base_url and
+                    settings.cloud_model_base_url.rstrip('/') in ('https://api.deepseek.com', 'https://api.deepseek.com/v1')):
+                from first_run import recheck_deepseek
+                return recheck_deepseek(env_file, settings, doctor)
+            return doctor(settings, connect=True)
+
+        report = check_model()
         if not report['ready'] and args.start_model and not args.check and settings.model_base_url == 'http://127.0.0.1:11434/v1':
             ollama = shutil.which('ollama') or str(Path('/Applications/Ollama.app/Contents/Resources/ollama'))
             if Path(ollama).is_file():
@@ -219,12 +226,17 @@ def main() -> int:
             ensure_loopback_port_available(args.port)
             from inkwise.cli import write_private
             write_private(running, json.dumps({'pid': os.getpid(), 'started': process_stamp(os.getpid()), 'port': args.port}))
-            prepared = serve_setup(args.port, lambda: doctor(settings, connect=True),
+            def check_from_page():
+                nonlocal report
+                report = check_model()
+                return report
+
+            prepared = serve_setup(args.port, check_from_page,
                                    model_name=settings.model_name or settings.cloud_model_name,
                                    model_base_url=settings.model_base_url or settings.cloud_model_base_url)
             running.unlink(missing_ok=True)
-            if prepared:
-                report = doctor(settings, connect=True)
+            if not prepared:
+                return 2
         if not report['ready']:
             print(json.dumps(report, ensure_ascii=False))
             return 2
