@@ -35,3 +35,19 @@ def test_weight_proposal_rejects_unsafe_regularization(value):
     from inkwise.evaluation import propose_weights
     with pytest.raises(ValueError):
         propose_weights([[0,1],[1,0]], [0,1], [.5,.5], regularization=value)
+
+
+def test_directional_errors_count_only_held_out_labels_and_reconcile_with_mae():
+    labels = [(0, 3), (1, 2), (4, 1), (2, 2)]
+    rows = [dict(essayId=str(i), studentId=str(i), split='test', teacherBand=a, modelBand=b,
+                 language='en', grade=7) for i, (a, b) in enumerate(labels)]
+    rows.append({**rows[0], 'essayId':'train', 'studentId':'train', 'split':'train'})
+    report = metrics(rows)
+    for result in (report['overall'], report['groups']['en:g7']):
+        diag = result['bandErrors']
+        assert (diag['over'], diag['under'], diag['exact'], diag['twoOrMore']) == (2, 1, 1, 2)
+        matrix = diag['teacherByModel']
+        assert len(matrix) == 5 and all(len(row) == 5 for row in matrix)
+        assert sum(map(sum, matrix)) == result['count'] == 4
+        assert all(matrix[a][b] == 1 for a, b in labels)
+        assert sum(abs(a-b)*matrix[a][b] for a in range(5) for b in range(5)) == result['mae'] * 4

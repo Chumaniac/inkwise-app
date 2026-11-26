@@ -44,9 +44,24 @@ def metrics(rows: list[dict]) -> dict:
         raise ValueError("A held-out test partition is required")
     def summarize(part):
         expected, predicted = [r["teacherBand"] for r in part], [r["modelBand"] for r in part]
-        return {"count":len(part), "qwk":qwk(expected,predicted),
-                "mae":sum(abs(a-b) for a,b in zip(expected,predicted))/len(part),
-                "adjacentAgreement":sum(abs(a-b)<=1 for a,b in zip(expected,predicted))/len(part)}
+        agreement = qwk(expected, predicted)  # validates both labels on the fixed 0..4 scale
+        matrix = [[0] * 5 for _ in range(5)]
+        over = under = exact = large = error_sum = 0
+        for teacher, model in zip(expected, predicted):
+            matrix[teacher][model] += 1
+            difference = model - teacher
+            over += difference > 0
+            under += difference < 0
+            exact += difference == 0
+            large += abs(difference) >= 2
+            error_sum += abs(difference)
+        return {
+            "count": len(part), "qwk": agreement, "mae": error_sum / len(part),
+            "adjacentAgreement": (len(part) - large) / len(part),
+            "bandErrors": {"teacherByModel": matrix, "over": over, "under": under,
+                           "exact": exact, "twoOrMore": large},
+        }
+
     groups = defaultdict(list)
     for row in test:
         groups[f"{row['language']}:g{row['grade']}"] .append(row)
