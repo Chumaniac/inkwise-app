@@ -393,3 +393,28 @@ def test_readiness_is_public_and_runtime_configuration_is_scoped(client):
     assert set(details.json()) == {"modelConfigured", "ocrConfigured", "cloudEnabled"}
     assert details.json()["cloudEnabled"] is False
     assert all(isinstance(value, bool) for value in details.json().values())
+
+
+def test_progress_events_read_only_navigation_metadata(client):
+    from sqlalchemy import event
+
+    job = create(client).json()
+    with client.app.state.sessions() as session:
+        engine = session.get_bind()
+    selected = {}
+
+    def capture(_conn, _cursor, statement, _params, _context, _many):
+        sql = " ".join(statement.split())
+        for table in ("jobs", "job_events"):
+            if f" FROM {table} WHERE " in sql:
+                selected[table] = sql.split(" FROM ", 1)[0].removeprefix("SELECT ").split(", ")
+
+    event.listen(engine, "before_cursor_execute", capture)
+    try:
+        response = client.get(f"/api/v1/jobs/{job['id']}/events", headers=auth())
+    finally:
+        event.remove(engine, "before_cursor_execute", capture)
+    assert response.status_code == 200
+    assert selected == {"jobs": ["jobs.id"], "job_events": [
+        "job_events.id", "job_events.event", "job_events.job_version", "job_events.created_at",
+    ]}

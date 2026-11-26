@@ -524,9 +524,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/api/v1/jobs/{job_id}/events")
     def events(job_id: str, user: User, after: Annotated[int, Query(ge=0, le=2**63-1)] = 0,
                limit: Annotated[int, Query(ge=1, le=100)] = 100, db=DB):
-        get_job(db, user, job_id)
-        rows = db.scalars(select(JobEvent).where(JobEvent.tenant_id == user.tenant_id,
-                JobEvent.job_id == job_id, JobEvent.id > after).order_by(JobEvent.id).limit(limit+1)).all()
+        # Reading progress needs only ownership and event metadata, including for empty pages.
+        visible_id = db.scalar(select(Job.id).where(Job.id == job_id, *job_scope(user)))
+        if visible_id is None:
+            raise DomainError("NOT_FOUND", 404)
+        rows = db.execute(
+            select(JobEvent.id, JobEvent.event, JobEvent.job_version, JobEvent.created_at)
+            .where(JobEvent.tenant_id == user.tenant_id, JobEvent.job_id == visible_id, JobEvent.id > after)
+            .order_by(JobEvent.id).limit(limit + 1)
+        ).all()
         page = rows[:limit]
         return {"items": [{"id": e.id, "event": e.event, "version": e.job_version,
                            "createdAt": utc_iso(e.created_at)} for e in page],
